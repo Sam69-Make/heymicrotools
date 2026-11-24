@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Image Compressor – Reduce JPG, PNG and WebP size to a target KB | heymicrotools</title>
+<meta name="description" content="Free image compressor that runs in your browser. Shrink JPG, PNG and WebP files with a quality slider or hit an exact target size like 50 KB or 100 KB. Nothing is uploaded.">
+<link rel="canonical" href="https://heymicrotools.com/image-compressor.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'] },
+  colors: { brand: { DEFAULT: '#2563EB', dark: '#1D4ED8', soft: '#EFF4FF' } }
+}}}
+</script>
+<style>
+  :root { color-scheme: light; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-behavior: smooth; scroll-padding-top: 8rem; }
+  body { background: #fff; font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  :focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; border-radius: 6px; }
+  .filter-link[aria-current="true"] { color: #2563EB; background: #EFF4FF; }
+  .num { font-variant-numeric: tabular-nums; }
+  .checker { background-color: #fff; background-image: linear-gradient(45deg, #F1F5F9 25%, transparent 25%, transparent 75%, #F1F5F9 75%), linear-gradient(45deg, #F1F5F9 25%, transparent 25%, transparent 75%, #F1F5F9 75%); background-size: 16px 16px; background-position: 0 0, 8px 8px; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  details[open] .chev { transform: rotate(180deg); }
+  #drop.is-over { border-color: #2563EB; background: #EFF4FF; }
+  #drop:focus-within { border-color: #2563EB; box-shadow: 0 0 0 4px rgba(37,99,235,.12); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { animation: spin .8s linear infinite; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } .spinner { animation: none; } }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "WebApplication", "name": "Image Compressor", "url": "https://heymicrotools.com/image-compressor.html", "applicationCategory": "MultimediaApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+    { "@type": "FAQPage", "mainEntity": [
+      { "@type": "Question", "name": "Are my images uploaded to a server?", "acceptedAnswer": { "@type": "Answer", "text": "No. Compression happens inside your browser using the HTML5 canvas. Your image never leaves your device, so it is safe to use with private photos and documents." } },
+      { "@type": "Question", "name": "What quality setting should I use?", "acceptedAnswer": { "@type": "Answer", "text": "For photos, 70 to 80 percent usually looks the same as the original at a much smaller size. Going below about 50 percent tends to show blocky artifacts." } },
+      { "@type": "Question", "name": "Why won’t my PNG get smaller with the quality slider?", "acceptedAnswer": { "@type": "Answer", "text": "PNG is a lossless format, so quality settings do not apply to it. Change the output format to WebP or JPEG, or use the target size option, which shrinks the dimensions if needed." } }
+    ] }
+  ]
+}
+</script>
+</head>
+<body class="text-slate-900 font-sans antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur" style="padding-top: env(safe-area-inset-top, 0px)">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="flex h-16 items-center gap-4">
+      <a href="index.html" class="flex shrink-0 items-center gap-2 font-semibold tracking-tight" aria-label="heymicrotools home">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        </span>
+        <span class="text-[17px]">hey<span class="text-brand">micro</span>tools</span>
+      </a>
+
+      <nav class="ml-6 hidden items-center gap-1 md:flex" aria-label="Categories">
+        <a href="index.html#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">All</a>
+        <a href="index.html?cat=finance#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Finance</a>
+        <a href="index.html?cat=daily#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Daily Tools</a>
+        <a href="index.html?cat=image#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900" aria-current="true">Image Tools</a>
+      </nav>
+
+      <form action="index.html" method="get" role="search" class="relative ml-auto w-full max-w-[16rem] sm:max-w-xs">
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input name="q" type="search" placeholder="Search tools" autocomplete="off" aria-label="Search tools"
+          class="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm placeholder:text-slate-400 transition focus:border-brand focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand/10">
+      </form>
+    </div>
+
+    <nav class="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 pb-3 md:hidden" aria-label="Categories">
+      <a href="index.html#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">All</a>
+      <a href="index.html?cat=finance#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Finance</a>
+      <a href="index.html?cat=daily#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Daily Tools</a>
+      <a href="index.html?cat=image#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600" aria-current="true">Image Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Title -->
+  <section class="border-b border-slate-200" style="background-image: radial-gradient(#E2E8F0 1px, transparent 1px); background-size: 22px 22px;">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+      <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
+        <a href="index.html" class="hover:text-brand">Home</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <a href="index.html?cat=image#tools" class="hover:text-brand">Image Tools</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <span class="text-slate-700">Image Compressor</span>
+      </nav>
+      <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">Image Compressor</h1>
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+        Make JPG, PNG and WebP files smaller, or resize them to an exact size like 50 KB or 100 KB. Your image is processed in your browser and never uploaded.
+      </p>
+    </div>
+  </section>
+
+  <!-- Tool -->
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,4fr)_minmax(0,8fr)]">
+
+      <!-- Controls -->
+      <div class="order-2 h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_12px_32px_-12px_rgba(15,23,42,.12)] sm:p-6 lg:order-1">
+        <h2 class="text-sm font-semibold">Compression settings</h2>
+
+        <fieldset class="mt-4">
+          <legend class="sr-only">Compression mode</legend>
+          <div class="grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1">
+            <label class="block">
+              <input type="radio" name="mode" value="quality" class="peer sr-only" checked>
+              <span class="block cursor-pointer rounded-md px-3 py-2 text-center text-sm font-medium text-slate-600 transition peer-checked:bg-white peer-checked:text-slate-900 peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-brand">Quality</span>
+            </label>
+            <label class="block">
+              <input type="radio" name="mode" value="target" class="peer sr-only">
+              <span class="block cursor-pointer rounded-md px-3 py-2 text-center text-sm font-medium text-slate-600 transition peer-checked:bg-white peer-checked:text-slate-900 peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-brand">Target size</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <!-- Quality -->
+        <div id="mode-quality" class="mt-5">
+          <div class="flex items-center justify-between">
+            <label for="q" class="text-sm font-medium text-slate-700">Quality</label>
+            <output id="q-out" for="q" class="num text-sm font-semibold text-brand">75%</output>
+          </div>
+          <input id="q" type="range" min="10" max="100" step="1" value="75" class="mt-3 h-2 w-full cursor-pointer accent-brand">
+          <div class="mt-1.5 flex justify-between text-xs text-slate-500"><span>Smaller file</span><span>Better quality</span></div>
+        </div>
+
+        <!-- Target -->
+        <div id="mode-target" class="mt-5 hidden">
+          <label for="kb" class="block text-sm font-medium text-slate-700">Target file size</label>
+          <div class="mt-1.5 flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10">
+            <input id="kb" type="number" inputmode="numeric" min="5" max="10000" step="1" value="100" class="num h-11 w-full border-0 bg-transparent px-3 text-[15px] text-slate-900 focus:outline-none">
+            <span class="border-l border-slate-200 bg-slate-50 px-3.5 py-3 text-sm text-slate-500">KB</span>
+          </div>
+          <div class="mt-2.5 flex flex-wrap gap-2" role="group" aria-label="Common target sizes">
+            <button type="button" data-kb="20" class="chip rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 transition-colors hover:border-brand hover:text-brand">20 KB</button>
+            <button type="button" data-kb="50" class="chip rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 transition-colors hover:border-brand hover:text-brand">50 KB</button>
+            <button type="button" data-kb="100" class="chip rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 transition-colors hover:border-brand hover:text-brand">100 KB</button>
+            <button type="button" data-kb="200" class="chip rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 transition-colors hover:border-brand hover:text-brand">200 KB</button>
+            <button type="button" data-kb="500" class="chip rounded-full border border-slate-200 px-3 py-1 text-xs font-medium text-slate-600 transition-colors hover:border-brand hover:text-brand">500 KB</button>
+          </div>
+          <p id="kb-hint" class="mt-2 text-xs text-slate-500">We lower quality first, then reduce dimensions only if needed.</p>
+        </div>
+
+        <div class="mt-5">
+          <label for="fmt" class="block text-sm font-medium text-slate-700">Output format</label>
+          <select id="fmt" class="mt-1.5 h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-[15px] text-slate-900 transition focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10">
+            <option value="auto">Same as original</option>
+            <option value="jpeg">JPEG (best for photos)</option>
+            <option value="webp">WebP (smallest)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Workspace -->
+      <div class="order-1 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 lg:order-2" aria-live="polite">
+        <label id="drop" for="file" class="flex min-h-[20rem] cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 px-6 py-10 text-center transition hover:border-brand hover:bg-brand-soft/40">
+          <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v2.5A1.5 1.5 0 0 0 5.5 20h13a1.5 1.5 0 0 0 1.5-1.5V16"/></svg>
+          </span>
+          <span class="mt-4 font-semibold">Drop an image here</span>
+          <span class="mt-1 max-w-xs text-sm text-slate-600">or click to choose a file. JPG, PNG or WebP, up to 30 MB. You can also paste from your clipboard.</span>
+          <span class="mt-5 inline-flex h-10 items-center rounded-lg bg-brand px-4 text-sm font-semibold text-white">Choose image</span>
+          <input id="file" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only">
+        </label>
+
+        <p id="err" role="alert" class="mt-4 hidden rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"></p>
+
+        <div id="work" class="hidden">
+          <div class="flex items-center justify-between gap-3">
+            <p id="fname" class="truncate text-sm font-medium text-slate-700"></p>
+            <button id="another" type="button" class="shrink-0 rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50">Choose another</button>
+          </div>
+
+          <div class="mt-4 rounded-xl bg-brand-soft p-4">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <p id="saved-main" class="num text-3xl font-bold tracking-tight text-brand"></p>
+              <p id="saved-sub" class="num text-sm text-slate-600"></p>
+            </div>
+            <div class="mt-3 h-2 overflow-hidden rounded-full bg-white" aria-hidden="true">
+              <div id="bar" class="h-full rounded-full bg-brand transition-all duration-300" style="width:100%"></div>
+            </div>
+          </div>
+
+          <div class="mt-3 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-xl border border-slate-200 p-3">
+              <p class="text-xs font-medium text-slate-500">Original</p>
+              <div class="checker mt-2 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg border border-slate-100">
+                <img id="img-o" alt="Original image preview" class="max-h-full max-w-full object-contain">
+              </div>
+              <p id="o-size" class="num mt-3 text-xl font-semibold"></p>
+              <p id="o-meta" class="num text-xs text-slate-500"></p>
+            </div>
+            <div id="c-card" class="rounded-xl border border-brand/30 p-3 transition-opacity">
+              <div class="flex items-center justify-between">
+                <p class="text-xs font-medium text-slate-500">Compressed</p>
+                <span id="busy" class="hidden items-center gap-1.5 text-xs text-slate-500">
+                  <svg class="spinner h-3.5 w-3.5 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 3a9 9 0 1 0 9 9" /></svg>
+                  Compressing
+                </span>
+              </div>
+              <div class="checker mt-2 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-lg border border-slate-100">
+                <img id="img-c" alt="Compressed image preview" class="max-h-full max-w-full object-contain">
+              </div>
+              <p id="c-size" class="num mt-3 text-xl font-semibold text-brand"></p>
+              <p id="c-meta" class="num text-xs text-slate-500"></p>
+            </div>
+          </div>
+
+          <p id="note" class="mt-3 hidden rounded-lg border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm text-amber-800"></p>
+
+          <button id="download" type="button" disabled class="mt-4 inline-flex h-12 w-full items-center justify-center gap-2 rounded-lg bg-brand px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M7 11l5 5 5-5"/><path d="M4 18v1.5A1.5 1.5 0 0 0 5.5 21h13a1.5 1.5 0 0 0 1.5-1.5V18"/></svg>
+            Download compressed image
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guide -->
+  <section class="border-t border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-16">
+      <h2 class="text-2xl font-bold tracking-tight">How to get the file size you need</h2>
+      <ol class="mt-6 space-y-5">
+        <li class="flex gap-4">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">1</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Add your image.</strong> Drag it onto the box, click to browse, or paste a screenshot straight from your clipboard.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">2</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Pick how to shrink it.</strong> Use <em>Quality</em> when you just want a lighter file. Use <em>Target size</em> when a form or email says “under 100 KB” and you need to land below a limit.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">3</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Compare and download.</strong> Check the preview and the percentage saved, then download. Changing any setting re-compresses the image instantly.</p>
+        </li>
+      </ol>
+
+      <h3 class="mt-10 font-semibold">Practical tips</h3>
+      <ul class="mt-3 space-y-3 leading-relaxed text-slate-700">
+        <li><strong class="font-semibold text-slate-900">Start at 75%.</strong> For most photos it is hard to tell from the original, and the file is often more than half the size.</li>
+        <li><strong class="font-semibold text-slate-900">Use JPEG or WebP for photos.</strong> Keep PNG for logos, screenshots and anything with sharp text or transparency. WebP gives the smallest files and keeps transparency.</li>
+        <li><strong class="font-semibold text-slate-900">Very small targets cost sharpness.</strong> If you ask for a size the image can’t reach at readable quality, the tool also reduces the dimensions and tells you so.</li>
+        <li><strong class="font-semibold text-slate-900">Results land at or just under your target.</strong> The tool searches for the highest quality that still fits, so expect a few KB of headroom rather than an exact match.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-t border-slate-200">
+    <div class="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-16">
+      <h2 class="text-2xl font-bold tracking-tight">Frequently asked questions</h2>
+      <div class="mt-6 divide-y divide-slate-200 rounded-xl border border-slate-200">
+        <details class="group p-5" open>
+          <summary class="flex items-center justify-between gap-4 font-semibold">
+            Are my images uploaded to a server?
+            <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 leading-relaxed text-slate-600">No. Compression happens inside your browser using the HTML5 canvas, so the image never leaves your device. That makes it safe for private photos and documents, and it works even on a slow connection once the page has loaded.</p>
+        </details>
+        <details class="group p-5">
+          <summary class="flex items-center justify-between gap-4 font-semibold">
+            What quality setting should I use?
+            <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 leading-relaxed text-slate-600">For photos, 70 to 80 percent is the sweet spot: the difference from the original is rarely visible and the savings are large. Below about 50 percent you will start to see blocky patches and blurred edges, especially around text.</p>
+        </details>
+        <details class="group p-5">
+          <summary class="flex items-center justify-between gap-4 font-semibold">
+            Why won’t my PNG get smaller with the quality slider?
+            <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 leading-relaxed text-slate-600">PNG is a lossless format, so a quality setting has nothing to throw away. To shrink a PNG, change the output format to WebP or JPEG, or use Target size, which reduces the image dimensions when it needs to. Note that JPEG does not support transparency, so transparent areas become white.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6" style="padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px))">
+    <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+      <div class="max-w-xs">
+        <a href="index.html" class="flex items-center gap-2 font-semibold tracking-tight">
+          <span class="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-white">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+          </span>
+          hey<span class="text-brand">micro</span>tools
+        </a>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">Simple, private tools for everyday tasks.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-10 sm:gap-16">
+        <div>
+          <h4 class="text-sm font-semibold">Company</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="about.html" class="transition-colors hover:text-brand">About Us</a></li>
+            <li><a href="contact.html" class="transition-colors hover:text-brand">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold">Legal</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="privacy-policy.html" class="transition-colors hover:text-brand">Privacy Policy</a></li>
+            <li><a href="terms-of-service.html" class="transition-colors hover:text-brand">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500">
+      © <span id="year">2026</span> heymicrotools. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var MAX_BYTES = 30 * 1024 * 1024, MAX_PIXELS = 16000000;
+  var OK_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+  var EXT = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+  var LABEL = { 'image/jpeg': 'JPEG', 'image/png': 'PNG', 'image/webp': 'WebP' };
+
+  var file = null, im = null, nw = 0, nh = 0, baseScale = 1;
+  var origUrl = null, compUrl = null, cur = null, job = 0, timer = null;
+  var cv = document.createElement('canvas');
+
+  var drop = $('drop'), input = $('file'), work = $('work'), err = $('err'), note = $('note');
+  var fmt = $('fmt'), qEl = $('q'), kbEl = $('kb'), dl = $('download');
+
+  // WebP encoding is not available in every browser
+  var webpOK = cv.toDataURL('image/webp').indexOf('data:image/webp') === 0;
+  if (!webpOK) { fmt.removeChild(fmt.querySelector('option[value="webp"]')); }
+
+  function bytesText(b) {
+    if (b < 1024) return b + ' B';
+    if (b < 1048576) return (b / 1024).toFixed(1) + ' KB';
+    return (b / 1048576).toFixed(2) + ' MB';
+  }
+  function mode() { return document.querySelector('input[name="mode"]:checked').value; }
+  function showErr(msg) { err.textContent = msg; err.classList.remove('hidden'); }
+  function clearErr() { err.classList.add('hidden'); }
+  function setNote(msgs) {
+    if (msgs.length) { note.textContent = msgs.join(' '); note.classList.remove('hidden'); }
+    else { note.classList.add('hidden'); }
+  }
+
+  /* ---------- Loading ---------- */
+  function load(f) {
+    clearErr();
+    if (!f) return;
+    if (OK_TYPES.indexOf(f.type) === -1) { showErr('That file type isn’t supported. Choose a JPG, PNG or WebP image.'); return; }
+    if (f.size > MAX_BYTES) { showErr('That image is over 30 MB. Try a smaller file.'); return; }
+    var url = URL.createObjectURL(f), img = new Image();
+    img.onload = function () {
+      if (origUrl) URL.revokeObjectURL(origUrl);
+      file = f; im = img; origUrl = url;
+      nw = img.naturalWidth; nh = img.naturalHeight;
+      baseScale = Math.min(1, Math.sqrt(MAX_PIXELS / (nw * nh)));
+      $('fname').textContent = f.name;
+      $('img-o').src = origUrl;
+      $('o-size').textContent = bytesText(f.size);
+      $('o-meta').textContent = nw + ' × ' + nh + ' px, ' + LABEL[f.type];
+      drop.classList.add('hidden'); work.classList.remove('hidden');
+      run();
+    };
+    img.onerror = function () { URL.revokeObjectURL(url); showErr('That image couldn’t be read. It may be damaged.'); };
+    img.src = url;
+  }
+
+  /* ---------- Compression ---------- */
+  function outType() {
+    var v = fmt.value;
+    if (v === 'jpeg') return 'image/jpeg';
+    if (v === 'webp') return 'image/webp';
+    return (file.type === 'image/webp' && !webpOK) ? 'image/jpeg' : file.type;
+  }
+  function draw(scale, type) {
+    var w = Math.max(1, Math.round(nw * scale)), h = Math.max(1, Math.round(nh * scale));
+    cv.width = w; cv.height = h;
+    var ctx = cv.getContext('2d');
+    if (type === 'image/jpeg') { ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, w, h); }
+    ctx.imageSmoothingQuality = 'high';
+    ctx.drawImage(im, 0, 0, w, h);
+    return { w: w, h: h };
+  }
+  function enc(type, q) {
+    return new Promise(function (res, rej) {
+      cv.toBlob(function (b) { b ? res(b) : rej(new Error('encode')); }, type, q);
+    });
+  }
+
+  async function byQuality(type) {
+    var q = qEl.value / 100, d = draw(baseScale, type);
+    var blob = await enc(type, q);
+    return { blob: blob, w: d.w, h: d.h, q: q, scale: baseScale, type: type };
+  }
+
+  async function byTarget(type, target) {
+    var scale = baseScale, d, blob, best = null, tries = 0;
+    var lossless = (type === 'image/png');
+    while (tries++ < 10) {
+      d = draw(scale, type);
+      if (lossless) {
+        blob = await enc(type);
+        best = { blob: blob, w: d.w, h: d.h, q: null, scale: scale, type: type };
+        if (blob.size <= target) break;
+      } else {
+        blob = await enc(type, 0.95);
+        if (blob.size <= target) { return { blob: blob, w: d.w, h: d.h, q: 0.95, scale: scale, type: type }; }
+        var low = await enc(type, 0.05);
+        best = { blob: low, w: d.w, h: d.h, q: 0.05, scale: scale, type: type };
+        if (low.size <= target) {
+          var lo = 0.05, hi = 0.95;
+          for (var i = 0; i < 7; i++) {
+            var mid = (lo + hi) / 2, b = await enc(type, mid);
+            if (b.size <= target) { best = { blob: b, w: d.w, h: d.h, q: mid, scale: scale, type: type }; lo = mid; } else { hi = mid; }
+          }
+          break;
+        }
+        blob = low;
+      }
+      var next = scale * Math.max(0.5, Math.sqrt(target / blob.size) * 0.95);
+      if (Math.min(nw, nh) * next < 24) break;
+      scale = next;
+    }
+    return best;
+  }
+
+  async function run() {
+    if (!im) return;
+    var my = ++job, type = outType(), target = 0;
+    if (mode() === 'target') {
+      var kb = parseFloat(kbEl.value);
+      if (!(kb >= 5 && kb <= 10000)) { $('kb-hint').textContent = 'Enter a size between 5 and 10,000 KB.'; $('kb-hint').classList.add('text-red-600'); return; }
+      $('kb-hint').textContent = 'We lower quality first, then reduce dimensions only if needed.'; $('kb-hint').classList.remove('text-red-600');
+      target = Math.floor(kb * 1024);
+    }
+    $('busy').classList.remove('hidden'); $('busy').classList.add('inline-flex'); $('c-card').style.opacity = '.6';
+    try {
+      var res = target ? await byTarget(type, target) : await byQuality(type);
+      if (my !== job) return;
+      cur = res; render(res, target);
+    } catch (e) {
+      if (my === job) { dl.disabled = true; setNote(['Something went wrong while compressing. Try a different image or format.']); }
+    } finally {
+      if (my === job) { $('busy').classList.add('hidden'); $('busy').classList.remove('inline-flex'); $('c-card').style.opacity = '1'; }
+    }
+  }
+
+  function render(r, target) {
+    if (compUrl) URL.revokeObjectURL(compUrl);
+    compUrl = URL.createObjectURL(r.blob);
+    $('img-c').src = compUrl;
+    var os = file.size, cs = r.blob.size, saved = 1 - cs / os, notes = [];
+    $('c-size').textContent = bytesText(cs);
+    $('c-meta').textContent = r.w + ' × ' + r.h + ' px, ' + LABEL[r.type] + (r.q === null ? ', lossless' : ', quality ' + Math.round(r.q * 100) + '%');
+
+    if (saved > 0) {
+      var pct = Math.round(saved * 100);
+      $('saved-main').textContent = (pct === 0 ? '<1' : pct) + '% smaller';
+      $('saved-sub').textContent = 'You save ' + bytesText(os - cs);
+    } else {
+      $('saved-main').textContent = 'No size saved';
+      $('saved-sub').textContent = bytesText(cs - os) + ' larger than the original';
+    }
+    $('bar').style.width = Math.min(100, (cs / os) * 100) + '%';
+
+    if (saved <= 0) notes.push('This image is already compact, so re-encoding didn’t make it smaller. Lower the quality, switch to WebP, or keep the original.');
+    if (r.type === 'image/png' && !target) notes.push('PNG is lossless, so the quality slider has no effect. Choose WebP or JPEG as the output format, or use Target size.');
+    if (r.type === 'image/jpeg' && file.type !== 'image/jpeg') notes.push('JPEG doesn’t support transparency, so any transparent areas are filled with white.');
+    if (target) {
+      if (cs > target) notes.push('We couldn’t reach ' + bytesText(target) + ' without making the image too small. This is the smallest readable result.');
+      else if (r.scale < baseScale - 0.001) notes.push('To fit ' + bytesText(target) + ', the image was also resized to ' + r.w + ' × ' + r.h + ' px.');
+      else if (r.q === 0.95 && saved > 0) notes.push('The image already fits under your target, so we kept quality high.');
+    } else if (r.scale < 1) {
+      notes.push('This image is very large, so it was reduced to ' + r.w + ' × ' + r.h + ' px to fit your browser’s limits.');
+    }
+    setNote(notes);
+    dl.disabled = false;
+  }
+
+  function schedule() { clearTimeout(timer); timer = setTimeout(run, 150); }
+
+  /* ---------- Events ---------- */
+  input.addEventListener('change', function () { load(input.files[0]); input.value = ''; });
+  ['dragenter', 'dragover'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.add('is-over'); });
+  });
+  ['dragleave', 'drop'].forEach(function (ev) {
+    drop.addEventListener(ev, function (e) { e.preventDefault(); drop.classList.remove('is-over'); });
+  });
+  drop.addEventListener('drop', function (e) { load(e.dataTransfer.files[0]); });
+  window.addEventListener('dragover', function (e) { e.preventDefault(); });
+  window.addEventListener('drop', function (e) { e.preventDefault(); if (!drop.contains(e.target) && e.dataTransfer.files.length) load(e.dataTransfer.files[0]); });
+  document.addEventListener('paste', function (e) {
+    var items = e.clipboardData && e.clipboardData.files;
+    if (items && items.length) load(items[0]);
+  });
+
+  document.querySelectorAll('input[name="mode"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      var t = mode() === 'target';
+      $('mode-quality').classList.toggle('hidden', t);
+      $('mode-target').classList.toggle('hidden', !t);
+      schedule();
+    });
+  });
+  qEl.addEventListener('input', function () { $('q-out').textContent = qEl.value + '%'; schedule(); });
+  kbEl.addEventListener('input', schedule);
+  fmt.addEventListener('change', schedule);
+  document.querySelectorAll('.chip').forEach(function (c) {
+    c.addEventListener('click', function () { kbEl.value = c.dataset.kb; schedule(); });
+  });
+
+  $('another').addEventListener('click', function () {
+    job++; file = im = cur = null; clearErr(); setNote([]); dl.disabled = true;
+    if (compUrl) { URL.revokeObjectURL(compUrl); compUrl = null; }
+    if (origUrl) { URL.revokeObjectURL(origUrl); origUrl = null; }
+    work.classList.add('hidden'); drop.classList.remove('hidden'); input.click();
+  });
+
+  dl.addEventListener('click', function () {
+    if (!cur) return;
+    var base = file.name.replace(/\.[^.]+$/, '').replace(/[^\w\-]+/g, '-').replace(/^-+|-+$/g, '') || 'image';
+    var a = document.createElement('a');
+    a.href = compUrl; a.download = base + '-compressed.' + EXT[cur.type];
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  });
+
+  $('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

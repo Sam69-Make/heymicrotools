@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>About Us – Fast, private, free browser-based tools | heymicrotools</title>
+<meta name="description" content="heymicrotools is a collection of free calculators and everyday utilities that run entirely in your browser. No sign-up, no uploads, built to work well on a phone.">
+<link rel="canonical" href="https://heymicrotools.com/about.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'] },
+  colors: { brand: { DEFAULT: '#2563EB', dark: '#1D4ED8', soft: '#EFF4FF' } }
+}}}
+</script>
+<style>
+  :root { color-scheme: light; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-behavior: smooth; scroll-padding-top: 8rem; }
+  body { background: #fff; font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  :focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; border-radius: 6px; }
+  .filter-link[aria-current="true"] { color: #2563EB; background: #EFF4FF; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "AboutPage", "name": "About heymicrotools", "url": "https://heymicrotools.com/about.html", "isPartOf": { "@type": "WebSite", "name": "heymicrotools", "url": "https://heymicrotools.com/" } }
+</script>
+</head>
+<body class="text-slate-900 font-sans antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur" style="padding-top: env(safe-area-inset-top, 0px)">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="flex h-16 items-center gap-4">
+      <a href="index.html" class="flex shrink-0 items-center gap-2 font-semibold tracking-tight" aria-label="heymicrotools home">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        </span>
+        <span class="text-[17px]">hey<span class="text-brand">micro</span>tools</span>
+      </a>
+
+      <nav class="ml-6 hidden items-center gap-1 md:flex" aria-label="Categories">
+        <a href="index.html#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">All</a>
+        <a href="index.html?cat=finance#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Finance</a>
+        <a href="index.html?cat=daily#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Daily Tools</a>
+        <a href="index.html?cat=image#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Image Tools</a>
+      </nav>
+
+      <form action="index.html" method="get" role="search" class="relative ml-auto w-full max-w-[16rem] sm:max-w-xs">
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input name="q" type="search" placeholder="Search tools" autocomplete="off" aria-label="Search tools"
+          class="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm placeholder:text-slate-400 transition focus:border-brand focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand/10">
+      </form>
+    </div>
+
+    <nav class="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 pb-3 md:hidden" aria-label="Categories">
+      <a href="index.html#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">All</a>
+      <a href="index.html?cat=finance#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Finance</a>
+      <a href="index.html?cat=daily#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Daily Tools</a>
+      <a href="index.html?cat=image#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Image Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Title -->
+  <section class="border-b border-slate-200" style="background-image: radial-gradient(#E2E8F0 1px, transparent 1px); background-size: 22px 22px;">
+    <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-20">
+      <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
+        <a href="index.html" class="hover:text-brand">Home</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <span class="text-slate-700">About Us</span>
+      </nav>
+      <h1 class="mt-4 max-w-3xl text-4xl font-extrabold leading-[1.1] tracking-tight sm:text-5xl">
+        Small tools that do one job and get out of your way.
+      </h1>
+      <p class="mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
+        heymicrotools is a collection of free calculators and everyday utilities. They open fast, run in your browser, and work the same on a phone as they do on a laptop.
+      </p>
+    </div>
+  </section>
+
+  <!-- What it is -->
+  <section class="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-20">
+    <h2 class="text-2xl font-bold tracking-tight">What heymicrotools is</h2>
+    <div class="mt-5 space-y-4 text-[17px] leading-relaxed text-slate-700">
+      <p>Most of us need a quick calculation or a small file fix a few times a week. How old will someone be on a certain date? What percentage is this discount? Can this photo be under 100 KB for a form? These are small questions, and they shouldn’t require an account, an app download or a page full of pop-ups.</p>
+      <p>So we make tools for exactly those moments. Each one does a single thing, shows the answer as you type, and keeps the page clean. You land on it, get your result, and leave.</p>
+      <p>The tools are free to use. There is no trial period and no feature locked behind a plan.</p>
+    </div>
+  </section>
+
+  <!-- Principles -->
+  <section class="border-y border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
+      <h2 class="text-2xl font-bold tracking-tight">What we stand by</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-slate-600">Three rules shape every tool we publish.</p>
+
+      <div class="mt-8 grid gap-5 md:grid-cols-3">
+        <div class="rounded-xl border border-slate-200 bg-white p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10.5" width="16" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>
+          </span>
+          <h3 class="mt-4 font-semibold">Everything stays on your device</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600">Calculations and image processing run in your browser. The numbers you type and the files you choose are never sent to our servers, because we built the tools so they don’t need to be.</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>
+          </span>
+          <h3 class="mt-4 font-semibold">No sign-up, ever</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600">You don’t need an email address, a password or a profile. Open a tool and use it. If a tool ever needs something from you, it will be because the job requires it, not because we want your data.</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-6">
+          <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-soft text-brand">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/></svg>
+          </span>
+          <h3 class="mt-4 font-semibold">Simple on a small screen</h3>
+          <p class="mt-2 text-sm leading-relaxed text-slate-600">We design for the phone first. Fields are large enough to tap, the right keyboard opens for each input, and nothing needs pinching or zooming. The desktop version is the same page with more room.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How we build -->
+  <section class="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-20">
+    <h2 class="text-2xl font-bold tracking-tight">How we build tools</h2>
+    <p class="mt-3 leading-relaxed text-slate-600">A calculator is only useful if you can trust its answer. Before a tool goes live, it goes through the same steps.</p>
+
+    <ol class="mt-8 space-y-6">
+      <li class="flex gap-4">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">1</span>
+        <div>
+          <h3 class="font-semibold">Start with one clear job</h3>
+          <p class="mt-1 leading-relaxed text-slate-600">We decide what question the tool answers and leave out everything that doesn’t help answer it. A short page is easier to use and easier to check.</p>
+        </div>
+      </li>
+      <li class="flex gap-4">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">2</span>
+        <div>
+          <h3 class="font-semibold">Test for accuracy</h3>
+          <p class="mt-1 leading-relaxed text-slate-600">We check results against worked examples done by hand and against known values. We also try the awkward cases on purpose: leap days, zeros, negative numbers, very large and very small values, and empty fields.</p>
+        </div>
+      </li>
+      <li class="flex gap-4">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">3</span>
+        <div>
+          <h3 class="font-semibold">Test for speed</h3>
+          <p class="mt-1 leading-relaxed text-slate-600">Tools should respond as you type. We keep pages light, avoid heavy libraries and try them on ordinary phones, not only on a fast desktop.</p>
+        </div>
+      </li>
+      <li class="flex gap-4">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">4</span>
+        <div>
+          <h3 class="font-semibold">Explain the result</h3>
+          <p class="mt-1 leading-relaxed text-slate-600">Where it helps, we show the formula and a worked example next to the tool, so you can see how an answer was reached and check it yourself.</p>
+        </div>
+      </li>
+      <li class="flex gap-4">
+        <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">5</span>
+        <div>
+          <h3 class="font-semibold">Keep listening</h3>
+          <p class="mt-1 leading-relaxed text-slate-600">If you find a wrong result or a rough edge, tell us. A real example from a real person is the fastest way for us to fix something.</p>
+        </div>
+      </li>
+    </ol>
+
+    <p class="mt-8 rounded-xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm leading-relaxed text-slate-600">
+      A note on accuracy: our tools are built for everyday estimates and quick checks. For decisions about your health, taxes, legal matters or large amounts of money, please confirm the result with a qualified professional.
+    </p>
+  </section>
+
+  <!-- CTA -->
+  <section class="px-4 pb-16 sm:px-6 md:pb-24">
+    <div class="mx-auto max-w-6xl rounded-2xl bg-brand px-6 py-12 text-center text-white sm:px-10 md:py-16">
+      <h2 class="mx-auto max-w-xl text-2xl font-bold tracking-tight sm:text-3xl">Have a task that needs a quick answer?</h2>
+      <p class="mx-auto mt-3 max-w-lg leading-relaxed text-blue-100">Browse the full set of calculators and utilities. Everything is free and works right in your browser.</p>
+      <a href="index.html" class="mt-7 inline-flex h-12 items-center rounded-lg bg-white px-6 text-sm font-semibold text-brand shadow-sm transition-colors hover:bg-blue-50 focus-visible:outline-white">Explore All Tools</a>
+      <p class="mt-5 text-sm text-blue-100">Found a mistake or have an idea? <a href="contact.html" class="font-medium text-white underline underline-offset-4 hover:no-underline">Contact us</a>.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6" style="padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px))">
+    <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+      <div class="max-w-xs">
+        <a href="index.html" class="flex items-center gap-2 font-semibold tracking-tight">
+          <span class="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-white">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+          </span>
+          hey<span class="text-brand">micro</span>tools
+        </a>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">Simple, private tools for everyday tasks.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-10 sm:gap-16">
+        <div>
+          <h4 class="text-sm font-semibold">Company</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="about.html" class="transition-colors hover:text-brand">About Us</a></li>
+            <li><a href="contact.html" class="transition-colors hover:text-brand">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold">Legal</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="privacy-policy.html" class="transition-colors hover:text-brand">Privacy Policy</a></li>
+            <li><a href="terms-of-service.html" class="transition-colors hover:text-brand">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500">
+      © <span id="year">2026</span> heymicrotools. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

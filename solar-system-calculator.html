@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Solar System Calculator – Size, panels, inverter and payback | heymicrotools</title>
+<meta name="description" content="Free solar system calculator. Enter your monthly units or bill, or pick your appliances, to estimate the system size, number of 550W or 580W panels, inverter capacity, monthly generation and payback period.">
+<link rel="canonical" href="https://heymicrotools.com/solar-system-calculator.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'] },
+  colors: { brand: { DEFAULT: '#2563EB', dark: '#1D4ED8', soft: '#EFF4FF' } }
+}}}
+</script>
+<style type="text/tailwindcss">
+  @layer components {
+    .lbl { @apply mb-1.5 block text-sm font-medium text-slate-700; }
+    .field-wrap { @apply flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10; }
+    .field { @apply h-11 w-full min-w-0 border-0 bg-transparent px-3 text-[15px] tabular-nums text-slate-900 focus:outline-none; }
+    .suffix { @apply shrink-0 border-l border-slate-200 bg-slate-50 px-3 py-3 text-sm text-slate-500; }
+    .seg { @apply block cursor-pointer rounded-md px-3 py-2 text-center text-sm font-medium text-slate-600 transition peer-checked:bg-white peer-checked:text-slate-900 peer-checked:shadow-sm peer-focus-visible:ring-2 peer-focus-visible:ring-brand; }
+    .stat { @apply rounded-xl border border-slate-200 px-4 py-3.5; }
+    .step { @apply flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white; }
+  }
+</style>
+<style>
+  :root { color-scheme: light; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-behavior: smooth; scroll-padding-top: 8rem; }
+  body { background: #fff; font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  :focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; border-radius: 6px; }
+  .filter-link[aria-current="true"] { color: #2563EB; background: #EFF4FF; }
+  .num { font-variant-numeric: tabular-nums; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  details[open] > summary .chev { transform: rotate(180deg); }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "WebApplication", "name": "Solar System Calculator", "url": "https://heymicrotools.com/solar-system-calculator.html", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+    { "@type": "FAQPage", "mainEntity": [
+      { "@type": "Question", "name": "How many solar panels do I need for my home?", "acceptedAnswer": { "@type": "Answer", "text": "It depends on how much electricity you use and how much sun you get. As a rough guide, 450 kWh a month needs about a 4 kW system, which is eight 550W panels. A typical 550W panel is about two panels per kilowatt." } },
+      { "@type": "Question", "name": "How accurate is the payback period?", "acceptedAnswer": { "@type": "Answer", "text": "It is a planning estimate. It divides the system cost by the yearly savings on your electricity bill. Real payback changes with installation prices, your tariff, net metering rules, shading and how your usage changes over time." } },
+      { "@type": "Question", "name": "What size inverter do I need, and do I need batteries?", "acceptedAnswer": { "@type": "Answer", "text": "The inverter is usually sized close to the solar array, around the same kilowatt rating. It must also handle the largest load you run at once, such as an air conditioner. Batteries are optional and only needed if you want power during outages or at night." } }
+    ] }
+  ]
+}
+</script>
+</head>
+<body class="text-slate-900 font-sans antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur" style="padding-top: env(safe-area-inset-top, 0px)">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="flex h-16 items-center gap-4">
+      <a href="index.html" class="flex shrink-0 items-center gap-2 font-semibold tracking-tight" aria-label="heymicrotools home">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        </span>
+        <span class="text-[17px]">hey<span class="text-brand">micro</span>tools</span>
+      </a>
+
+      <nav class="ml-6 hidden items-center gap-1 md:flex" aria-label="Categories">
+        <a href="index.html#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">All</a>
+        <a href="index.html?cat=finance#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900" aria-current="true">Finance</a>
+        <a href="index.html?cat=daily#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Daily Tools</a>
+        <a href="index.html?cat=image#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Image Tools</a>
+      </nav>
+
+      <form action="index.html" method="get" role="search" class="relative ml-auto w-full max-w-[16rem] sm:max-w-xs">
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input name="q" type="search" placeholder="Search tools" autocomplete="off" aria-label="Search tools"
+          class="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm placeholder:text-slate-400 transition focus:border-brand focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand/10">
+      </form>
+    </div>
+
+    <nav class="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 pb-3 md:hidden" aria-label="Categories">
+      <a href="index.html#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">All</a>
+      <a href="index.html?cat=finance#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600" aria-current="true">Finance</a>
+      <a href="index.html?cat=daily#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Daily Tools</a>
+      <a href="index.html?cat=image#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Image Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Title -->
+  <section class="border-b border-slate-200" style="background-image: radial-gradient(#E2E8F0 1px, transparent 1px); background-size: 22px 22px;">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+      <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
+        <a href="index.html" class="hover:text-brand">Home</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <a href="index.html?cat=finance#tools" class="hover:text-brand">Finance</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <span class="text-slate-700">Solar System Calculator</span>
+      </nav>
+      <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">Solar System Calculator</h1>
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+        Find the solar system size, panel count and inverter that match how much electricity you use, and see roughly how long it takes to pay for itself.
+      </p>
+    </div>
+  </section>
+
+  <!-- Tool -->
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)]">
+
+      <!-- Inputs -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_12px_32px_-12px_rgba(15,23,42,.12)] sm:p-6">
+        <h2 class="text-sm font-semibold">How should we size it?</h2>
+        <fieldset class="mt-3">
+          <legend class="sr-only">Calculation method</legend>
+          <div class="grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1">
+            <label class="block"><input type="radio" name="src" value="usage" class="peer sr-only" checked><span class="seg">From my usage</span></label>
+            <label class="block"><input type="radio" name="src" value="appl" class="peer sr-only"><span class="seg">From appliances</span></label>
+          </div>
+        </fieldset>
+
+        <!-- Option A -->
+        <div id="panel-usage" class="mt-5">
+          <fieldset>
+            <legend class="sr-only">Usage type</legend>
+            <div class="inline-grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1">
+              <label class="block"><input type="radio" name="atype" value="units" class="peer sr-only" checked><span class="seg !px-4 !py-1.5">Units (kWh)</span></label>
+              <label class="block"><input type="radio" name="atype" value="bill" class="peer sr-only"><span class="seg !px-4 !py-1.5">Bill amount</span></label>
+            </div>
+          </fieldset>
+
+          <div id="f-units" class="mt-4">
+            <label for="units" class="lbl">Monthly electricity units</label>
+            <div class="field-wrap"><input id="units" class="field" type="number" inputmode="decimal" min="0" step="any" value="450" placeholder="For example 450"><span class="suffix">kWh / month</span></div>
+            <p class="mt-1.5 text-xs text-slate-500">You’ll find this on your electricity bill, often labeled units consumed.</p>
+          </div>
+          <div id="f-bill" class="mt-4 hidden">
+            <label for="bill" class="lbl">Average monthly bill</label>
+            <div class="field-wrap"><span class="suffix cur-lbl !border-l-0 !border-r">PKR</span><input id="bill" class="field" type="number" inputmode="decimal" min="0" step="any" placeholder="For example 22500"></div>
+            <p class="mt-1.5 text-xs text-slate-500">We convert this to units using your rate under Assumptions. Bills include fixed fees and taxes, so this can read slightly high.</p>
+          </div>
+        </div>
+
+        <!-- Option B -->
+        <div id="panel-appl" class="mt-5 hidden">
+          <p class="text-sm text-slate-600">Set how many of each appliance you run and for how many hours a day.</p>
+          <div id="appl" class="mt-3 divide-y divide-slate-200 rounded-xl border border-slate-200"></div>
+        </div>
+
+        <!-- Common settings -->
+        <div class="mt-6 border-t border-slate-200 pt-5">
+          <fieldset>
+            <legend class="lbl">Solar panel size</legend>
+            <div class="inline-grid grid-cols-2 gap-1 rounded-lg bg-slate-100 p-1">
+              <label class="block"><input type="radio" name="pw" value="550" class="peer sr-only" checked><span class="seg !px-6">550 W</span></label>
+              <label class="block"><input type="radio" name="pw" value="580" class="peer sr-only"><span class="seg !px-6">580 W</span></label>
+            </div>
+          </fieldset>
+
+          <details id="assump" class="mt-5 rounded-xl border border-slate-200">
+            <summary class="flex items-center justify-between gap-3 px-4 py-3 text-sm font-semibold">
+              Assumptions
+              <svg class="chev h-4 w-4 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <div class="space-y-4 border-t border-slate-200 px-4 py-4">
+              <p class="text-xs leading-relaxed text-slate-500">These are starting estimates. Replace them with your own tariff and installer quote for a better answer.</p>
+              <div>
+                <label for="cur" class="lbl">Currency</label>
+                <select id="cur" class="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-[15px] focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10">
+                  <option value="PKR">PKR</option><option value="INR">INR</option><option value="USD">USD</option><option value="EUR">EUR</option><option value="GBP">GBP</option>
+                </select>
+              </div>
+              <div class="grid gap-4 sm:grid-cols-2">
+                <div>
+                  <label for="rate" class="lbl">Electricity price</label>
+                  <div class="field-wrap"><input id="rate" class="field" type="number" inputmode="decimal" min="0" step="any"><span class="suffix"><span class="cur-lbl">PKR</span> / kWh</span></div>
+                </div>
+                <div>
+                  <label for="cost" class="lbl">Installed cost per kW</label>
+                  <div class="field-wrap"><input id="cost" class="field" type="number" inputmode="decimal" min="0" step="any"><span class="suffix"><span class="cur-lbl">PKR</span> / kW</span></div>
+                </div>
+              </div>
+              <div>
+                <label for="sun" class="lbl">Peak sun hours per day</label>
+                <div class="field-wrap"><input id="sun" class="field" type="number" inputmode="decimal" min="2" max="8" step="0.1" value="5"><span class="suffix">hours</span></div>
+                <p class="mt-1.5 text-xs text-slate-500">Between 2 and 8. Sunny regions are often 5 to 6. We also assume 80% system efficiency after losses.</p>
+              </div>
+            </div>
+          </details>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="h-fit rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 lg:sticky lg:top-28" aria-live="polite">
+        <div id="placeholder" class="flex min-h-[20rem] flex-col items-center justify-center text-center">
+          <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+          </span>
+          <p id="ph-title" class="mt-4 font-semibold">Add your usage to begin</p>
+          <p id="ph-text" class="mt-1 max-w-xs text-sm text-slate-600">Your recommended system appears here as soon as you enter a number.</p>
+        </div>
+
+        <div id="results" class="hidden">
+          <p id="r-basis" class="text-sm text-slate-500"></p>
+          <div class="mt-2 rounded-xl bg-brand-soft px-4 py-5">
+            <p class="text-xs font-medium text-slate-500">Recommended system size</p>
+            <p id="r-size" class="num mt-1 text-4xl font-bold tracking-tight text-brand sm:text-5xl"></p>
+            <p id="r-size-sub" class="num mt-1.5 text-sm text-slate-600"></p>
+          </div>
+
+          <div class="mt-3 grid gap-3 sm:grid-cols-2">
+            <div class="stat">
+              <p class="text-xs font-medium text-slate-500">Solar panels</p>
+              <p id="r-panels" class="num mt-1 text-xl font-semibold"></p>
+              <p id="r-panels-sub" class="num text-xs text-slate-500"></p>
+            </div>
+            <div class="stat">
+              <p class="text-xs font-medium text-slate-500">Inverter capacity</p>
+              <p id="r-inv" class="num mt-1 text-xl font-semibold"></p>
+              <p id="r-inv-sub" class="text-xs text-slate-500"></p>
+            </div>
+            <div class="stat">
+              <p class="text-xs font-medium text-slate-500">Monthly units generated</p>
+              <p id="r-gen" class="num mt-1 text-xl font-semibold"></p>
+              <p id="r-gen-sub" class="num text-xs text-slate-500"></p>
+            </div>
+            <div class="stat">
+              <p class="text-xs font-medium text-slate-500">Estimated payback</p>
+              <p id="r-pay" class="num mt-1 text-xl font-semibold"></p>
+              <p id="r-pay-sub" class="num text-xs text-slate-500"></p>
+            </div>
+          </div>
+
+          <p class="mt-4 text-xs leading-relaxed text-slate-500">Planning estimate only, not engineering or financial advice. Get a site survey and quotes from licensed installers before you buy. See our <a href="terms-of-service.html#accuracy" class="text-brand underline underline-offset-2">accuracy disclaimer</a>.</p>
+        </div>
+
+        <p id="err" role="alert" class="mt-4 hidden rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"></p>
+
+        <div class="mt-5 flex flex-wrap gap-3">
+          <button id="copy" type="button" disabled class="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-brand px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none sm:flex-none">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <span id="copy-label">Copy summary</span>
+          </button>
+          <button id="reset" type="button" class="inline-flex h-11 flex-1 items-center justify-center rounded-lg border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:flex-none">Reset</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Guide -->
+  <section class="border-t border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-16">
+      <h2 class="text-2xl font-bold tracking-tight">How solar sizing works</h2>
+      <p class="mt-3 leading-relaxed text-slate-600">
+        Sizing a system is a short chain of simple steps. A rule of thumb to keep in mind: with about 5 peak sun hours, each kilowatt of panels makes roughly 120 units a month.
+      </p>
+
+      <ol class="mt-6 space-y-5">
+        <li class="flex gap-4">
+          <span class="step">1</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Find your monthly use.</strong> Read the units (kWh) from a recent bill, or average several months. If you only know the bill amount, divide it by your price per unit. Without a bill, add up your appliances’ watts × hours.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="step">2</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Turn it into a daily need.</strong> Divide monthly units by 30. For example, 450 kWh a month is 15 kWh a day.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="step">3</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Divide by what 1 kW actually produces.</strong> Peak sun hours × 80% efficiency (for heat, dust, wiring and inverter losses). At 5 sun hours that is 5 × 0.8 = 4 kWh per kW per day. So 15 ÷ 4 = 3.75 kW.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="step">4</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Round up to a standard size and count panels.</strong> 3.75 kW rounds up to 4 kW. With 550 W panels, 4,000 ÷ 550 = 7.3, so you need 8 panels, which makes a 4.4 kW array that generates about 528 units a month.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="step">5</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Match the inverter.</strong> It is normally close to the array rating (4.4 kW of panels pairs with a 4 kW inverter). It must also cover the biggest load you run at once, which is why air conditioners matter in the appliance mode.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="step">6</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Estimate payback.</strong> Divide the system cost by yearly savings. If a system costs 700,000 and saves 22,500 a month, payback is 700,000 ÷ (22,500 × 12) ≈ 2.6 years. We count savings only for units you actually use.</p>
+        </li>
+      </ol>
+
+      <h3 class="mt-10 font-semibold">What changes the real answer</h3>
+      <ul class="mt-3 space-y-3 leading-relaxed text-slate-700">
+        <li><strong class="font-semibold text-slate-900">Shade and roof direction.</strong> A shaded or poorly angled roof can cut output noticeably, so a site survey matters.</li>
+        <li><strong class="font-semibold text-slate-900">Seasons.</strong> Output is lower in winter and monsoon months than the yearly average.</li>
+        <li><strong class="font-semibold text-slate-900">Net metering and batteries.</strong> Selling extra units back to the grid, or storing them in batteries, changes both cost and payback. This calculator assumes a grid-tied system without batteries.</li>
+        <li><strong class="font-semibold text-slate-900">Future use.</strong> If you plan to add an air conditioner or an electric vehicle, size up now.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-t border-slate-200">
+    <div class="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-16">
+      <h2 class="text-2xl font-bold tracking-tight">Frequently asked questions</h2>
+      <div class="mt-6 divide-y divide-slate-200 rounded-xl border border-slate-200">
+        <details class="p-5" open>
+          <summary class="flex items-center justify-between gap-4 font-semibold">
+            How many solar panels do I need for my home?
+            <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 leading-relaxed text-slate-600">It depends on how many units you use and how much sun you get. As a rough guide, about 450 kWh a month needs a 4 kW system, which is eight 550 W panels. A good shortcut is a little under two 550 W panels per kilowatt. Use the calculator above for your own numbers.</p>
+        </details>
+        <details class="p-5">
+          <summary class="flex items-center justify-between gap-4 font-semibold">
+            How accurate is the payback period?
+            <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 leading-relaxed text-slate-600">Treat it as a planning estimate. It divides the system cost by the yearly savings on your bill, using the price and cost you enter under Assumptions. Real results change with installation prices, your tariff, net metering rules, shading, and how your usage grows. Panels also lose a small amount of output each year. Compare the figure with a written quote from an installer.</p>
+        </details>
+        <details class="p-5">
+          <summary class="flex items-center justify-between gap-4 font-semibold">
+            What size inverter do I need, and do I need batteries?
+            <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 leading-relaxed text-slate-600">The inverter is usually close to the size of the solar array, and it must also handle the largest load you run at the same time, such as an air conditioner starting up. Batteries are optional. You only need them if you want power during outages or at night. They add significant cost, so they lengthen the payback period.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6" style="padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px))">
+    <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+      <div class="max-w-xs">
+        <a href="index.html" class="flex items-center gap-2 font-semibold tracking-tight">
+          <span class="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-white">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+          </span>
+          hey<span class="text-brand">micro</span>tools
+        </a>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">Simple, private tools for everyday tasks.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-10 sm:gap-16">
+        <div>
+          <h4 class="text-sm font-semibold">Company</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="about.html" class="transition-colors hover:text-brand">About Us</a></li>
+            <li><a href="contact.html" class="transition-colors hover:text-brand">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold">Legal</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="privacy-policy.html" class="transition-colors hover:text-brand">Privacy Policy</a></li>
+            <li><a href="terms-of-service.html" class="transition-colors hover:text-brand">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500">
+      © <span id="year">2026</span> heymicrotools. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var DEFAULT_CURRENCY = 'PKR';
+  // Starting estimates only. Visitors can edit every value under Assumptions.
+  var PRESETS = {
+    PKR: { rate: 50, cost: 160000 }, INR: { rate: 8, cost: 55000 },
+    USD: { rate: 0.16, cost: 2000 }, EUR: { rate: 0.30, cost: 1500 }, GBP: { rate: 0.27, cost: 1700 }
+  };
+  var STD = [1, 2, 3, 4, 5, 6, 8, 10, 12, 15, 20, 25, 30, 40, 50, 75, 100];
+  var EFF = 0.8, DAYS = 30;
+
+  // watts = running power, duty = share of "on" time the appliance draws that power
+  var APPL = [
+    { id: 'fan', name: 'Ceiling fans', spec: 'About 75 W each', w: 75, duty: 1, hours: 10, count: 4 },
+    { id: 'led', name: 'LED lights', spec: 'About 10 W each', w: 10, duty: 1, hours: 6, count: 8 },
+    { id: 'ac', name: 'Inverter AC (1.5 ton)', spec: 'About 1,500 W, runs at roughly 60% load', w: 1500, duty: 0.6, hours: 8, count: 1 },
+    { id: 'fridge', name: 'Refrigerator', spec: 'About 150 W, compressor cycles on and off', w: 150, duty: 0.4, hours: 24, count: 1 },
+    { id: 'wash', name: 'Washing machine', spec: 'About 500 W', w: 500, duty: 1, hours: 1, count: 1 }
+  ];
+  var DEFAULT_HOURS = {}; APPL.forEach(function (a) { DEFAULT_HOURS[a.id] = a.hours; });
+  var DEFAULT_COUNT = {}; APPL.forEach(function (a) { DEFAULT_COUNT[a.id] = a.count; });
+
+  var lastText = '';
+
+  /* ---------- Helpers ---------- */
+  function val(id) { var v = parseFloat($(id).value); return isNaN(v) || !isFinite(v) ? null : v; }
+  function radio(name) { return document.querySelector('input[name="' + name + '"]:checked').value; }
+  function pick(v) {
+    v = Math.round(v * 100) / 100;
+    for (var i = 0; i < STD.length; i++) if (STD[i] >= v) return STD[i];
+    return Math.ceil(v / 10) * 10;
+  }
+  function n1(n) { return n.toLocaleString('en-US', { maximumFractionDigits: 1 }); }
+  function n0(n) { return Math.round(n).toLocaleString('en-US'); }
+  function money(n) { return $('cur').value + ' ' + n0(n); }
+  function duration(yrs) {
+    var tm = Math.round(yrs * 12), y = Math.floor(tm / 12), m = tm % 12, p = [];
+    if (y) p.push(y + (y === 1 ? ' year' : ' years'));
+    if (m || !y) p.push(m + (m === 1 ? ' month' : ' months'));
+    return p.join(', ');
+  }
+
+  /* ---------- Appliance rows ---------- */
+  function renderAppl() {
+    $('appl').innerHTML = APPL.map(function (a) {
+      return '<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-3 p-4">' +
+        '<div class="min-w-0 flex-1 basis-40"><p class="text-[15px] font-semibold">' + a.name + '</p><p class="text-xs text-slate-500">' + a.spec + '</p></div>' +
+        '<div class="flex items-center gap-4">' +
+          '<label class="flex items-center gap-1.5 text-xs text-slate-500"><span class="sr-only">Hours per day for ' + a.name + '</span>' +
+            '<input id="h-' + a.id + '" type="number" inputmode="decimal" min="0" max="24" step="0.5" value="' + a.hours + '" class="h-9 w-16 rounded-lg border border-slate-200 px-2 text-center text-sm tabular-nums focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10">h/day</label>' +
+          '<div class="flex items-center gap-1">' +
+            '<button type="button" data-act="dec" data-id="' + a.id + '" aria-label="Fewer ' + a.name + '" class="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-lg text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50">−</button>' +
+            '<output id="c-' + a.id + '" class="w-9 text-center font-semibold tabular-nums">' + a.count + '</output>' +
+            '<button type="button" data-act="inc" data-id="' + a.id + '" aria-label="More ' + a.name + '" class="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-lg text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-50">+</button>' +
+          '</div></div></div>';
+    }).join('');
+  }
+  $('appl').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-act]');
+    if (!b) return;
+    var a = APPL.filter(function (x) { return x.id === b.dataset.id; })[0];
+    a.count = Math.max(0, Math.min(99, a.count + (b.dataset.act === 'inc' ? 1 : -1)));
+    $('c-' + a.id).textContent = a.count;
+    calc();
+  });
+  $('appl').addEventListener('input', function (e) {
+    APPL.forEach(function (a) { if (e.target.id === 'h-' + a.id) { var h = parseFloat(e.target.value); a.hours = isNaN(h) ? 0 : Math.max(0, Math.min(24, h)); } });
+    calc();
+  });
+
+  /* ---------- Calculation ---------- */
+  function showEmpty(title, text) {
+    $('results').classList.add('hidden'); $('placeholder').classList.remove('hidden');
+    $('ph-title').textContent = title; $('ph-text').textContent = text;
+    $('copy').disabled = true; lastText = '';
+  }
+  function showError(msg) { $('err').textContent = msg; $('err').classList.remove('hidden'); showEmpty('Check your entries', 'Fix the highlighted message to see your result.'); }
+
+  function calc() {
+    $('err').classList.add('hidden');
+    var rate = val('rate'), cost = val('cost'), sun = val('sun');
+    var src = radio('src'), E = null, basis = '', peakKW = 0;
+
+    if (sun === null || sun < 2 || sun > 8) return showError('Peak sun hours should be between 2 and 8. Change it under Assumptions.');
+    if (cost === null || cost < 0) return showError('Enter a valid installed cost per kW under Assumptions.');
+
+    if (src === 'usage') {
+      if (radio('atype') === 'units') {
+        E = val('units');
+        if (E === null || E <= 0) return showEmpty('Add your usage to begin', 'Your recommended system appears here as soon as you enter a number.');
+        basis = 'Based on ' + n0(E) + ' kWh per month';
+      } else {
+        var bill = val('bill');
+        if (bill === null || bill <= 0) return showEmpty('Add your bill to begin', 'Enter your average monthly bill and we’ll convert it to units.');
+        if (rate === null || rate <= 0) return showError('Enter your electricity price per kWh under Assumptions so the bill can be converted to units.');
+        E = bill / rate;
+        basis = 'Based on a ' + money(bill) + ' bill, about ' + n0(E) + ' kWh per month';
+      }
+    } else {
+      var wh = 0, peakW = 0, any = false;
+      APPL.forEach(function (a) { if (a.count > 0) { any = true; wh += a.count * a.w * a.duty * a.hours; peakW += a.count * a.w; } });
+      if (!any) return showEmpty('Add an appliance to begin', 'Use the + buttons to tell us what you run at home.');
+      E = wh / 1000 * DAYS; peakKW = peakW / 1000;
+      if (E <= 0) return showEmpty('Add hours of use', 'Set how many hours a day your appliances run.');
+      basis = 'Based on your appliances, about ' + n0(E) + ' kWh per month';
+    }
+    if (E > 1000000) return showError('That usage is too large for this calculator. Check the number you entered.');
+
+    var perKW = sun * EFF;                       // kWh per kW per day
+    var need = E / DAYS / perKW;                 // kW required
+    var std = pick(need);
+    var pw = parseInt(radio('pw'), 10);
+    var panels = Math.ceil(std * 1000 / pw);
+    var array = panels * pw / 1000;              // kWp installed
+    var inv = pick(Math.max(array / 1.1, peakKW));
+    var gen = array * perKW * DAYS;              // kWh per month
+    var covered = Math.min(gen, E);
+    var cover = Math.min(100, Math.round(gen / E * 100));
+    var price = array * cost;
+    var saving = covered * (rate || 0);
+    var yrs = saving > 0 ? price / (saving * 12) : null;
+
+    $('r-basis').textContent = basis;
+    $('r-size').textContent = std + ' kW';
+    $('r-size-sub').textContent = panels + ' × ' + pw + ' W panels = ' + n1(array) + ' kW array';
+    $('r-panels').textContent = panels + (panels === 1 ? ' panel' : ' panels');
+    $('r-panels-sub').textContent = pw + ' W each, ' + n1(array) + ' kW total';
+    $('r-inv').textContent = inv + ' kW';
+    $('r-inv-sub').textContent = src === 'appl' ? 'Covers your ' + n1(peakKW) + ' kW of appliances' : 'Matched to your array';
+    $('r-gen').textContent = n0(gen) + ' kWh';
+    $('r-gen-sub').textContent = 'About ' + cover + '% of your use';
+
+    var payText, paySub;
+    if (yrs === null) { payText = '–'; paySub = 'Enter an electricity price to see payback'; }
+    else {
+      payText = yrs > 30 ? '30+ years' : (yrs < 1 ? duration(yrs) : n1(yrs) + ' years');
+      paySub = (yrs > 30 || yrs < 1 ? '' : '≈ ' + duration(yrs) + '. ') + money(price) + ' cost, saves ' + money(saving) + '/month';
+    }
+    $('r-pay').textContent = payText; $('r-pay-sub').textContent = paySub;
+
+    lastText = 'Solar system estimate (heymicrotools.com)\n' +
+      basis + '\n' +
+      'Recommended system size: ' + std + ' kW\n' +
+      'Solar panels: ' + panels + ' × ' + pw + ' W (' + n1(array) + ' kW array)\n' +
+      'Inverter: ' + inv + ' kW\n' +
+      'Estimated generation: ' + n0(gen) + ' kWh per month (about ' + cover + '% of use)\n' +
+      (yrs === null ? '' : 'Estimated cost: ' + money(price) + '\nEstimated savings: ' + money(saving) + ' per month\nEstimated payback: ' + (yrs > 30 ? '30+ years' : duration(yrs)) + '\n') +
+      'Assumptions: ' + sun + ' peak sun hours, 80% system efficiency' + (rate ? ', ' + $('cur').value + ' ' + rate + ' per kWh' : '') + ', ' + money(cost) + ' per kW.\n' +
+      'Planning estimate only. Not engineering or financial advice.';
+
+    $('placeholder').classList.add('hidden'); $('results').classList.remove('hidden');
+    $('copy').disabled = false;
+  }
+
+  /* ---------- Controls ---------- */
+  function setCurrency(code) {
+    var p = PRESETS[code];
+    $('rate').value = p.rate; $('cost').value = p.cost;
+    document.querySelectorAll('.cur-lbl').forEach(function (el) { el.textContent = code; });
+  }
+  function togglePanels() {
+    var usage = radio('src') === 'usage', units = radio('atype') === 'units';
+    $('panel-usage').classList.toggle('hidden', !usage);
+    $('panel-appl').classList.toggle('hidden', usage);
+    $('f-units').classList.toggle('hidden', !units);
+    $('f-bill').classList.toggle('hidden', units);
+  }
+  document.querySelectorAll('input[name="src"], input[name="atype"]').forEach(function (r) {
+    r.addEventListener('change', function () {
+      togglePanels();
+      if (r.value === 'bill') $('assump').open = true;
+      calc();
+    });
+  });
+  document.querySelectorAll('input[name="pw"]').forEach(function (r) { r.addEventListener('change', calc); });
+  ['units', 'bill', 'rate', 'cost', 'sun'].forEach(function (id) { $(id).addEventListener('input', calc); });
+  $('cur').addEventListener('change', function () { setCurrency($('cur').value); calc(); });
+
+  $('reset').addEventListener('click', function () {
+    document.querySelector('input[name="src"][value="usage"]').checked = true;
+    document.querySelector('input[name="atype"][value="units"]').checked = true;
+    document.querySelector('input[name="pw"][value="550"]').checked = true;
+    $('units').value = ''; $('bill').value = ''; $('sun').value = 5;
+    APPL.forEach(function (a) { a.count = 0; a.hours = DEFAULT_HOURS[a.id]; });
+    renderAppl();
+    APPL.forEach(function (a) { $('c-' + a.id).textContent = 0; });
+    setCurrency($('cur').value);
+    togglePanels(); calc(); $('units').focus();
+  });
+
+  /* ---------- Copy ---------- */
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); return ok;
+  }
+  function flash(t) { $('copy-label').textContent = t; setTimeout(function () { $('copy-label').textContent = 'Copy summary'; }, 1800); }
+  $('copy').addEventListener('click', function () {
+    if (!lastText) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastText).then(function () { flash('Copied'); }, function () { flash(fallbackCopy(lastText) ? 'Copied' : 'Copy failed'); });
+    } else { flash(fallbackCopy(lastText) ? 'Copied' : 'Copy failed'); }
+  });
+
+  /* ---------- Init ---------- */
+  $('cur').value = DEFAULT_CURRENCY;
+  setCurrency(DEFAULT_CURRENCY);
+  renderAppl(); togglePanels(); calc();
+  $('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

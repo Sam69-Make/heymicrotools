@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Counter – Count Words &amp; Characters Online | heymicrotools</title>
+  <meta name="description" content="Free online word counter. Paste or type your text to instantly count words, characters, sentences and paragraphs, and see the estimated reading time." />
+  <meta name="theme-color" content="#2563EB" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: { brand: { DEFAULT: '#2563EB', dark: '#1D4ED8', soft: '#EFF6FF' } }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    #text { min-height: 18rem; overflow: hidden; resize: none; }
+    @media (min-width: 640px) { #text { min-height: 22rem; } }
+
+    .tool-btn:disabled { opacity: .45; cursor: not-allowed; }
+    .stat-num { font-variant-numeric: tabular-nums; }
+    .pop { animation: pop .25s ease both; }
+    @keyframes pop { from { opacity: 0; transform: translateY(3px); } to { opacity: 1; transform: none; } }
+    @media (prefers-reduced-motion: reduce) { .pop { animation: none; } html { scroll-behavior: auto; } }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How does the counter work out words, sentences and paragraphs?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Words are any groups of characters separated by spaces or line breaks. Sentences end at a full stop, question mark or exclamation mark, and each line break also starts a new sentence. Paragraphs are counted as the lines of text separated by a line break." }
+      },
+      {
+        "@type": "Question",
+        "name": "How is the reading time calculated?",
+        "acceptedAnswer": { "@type": "Answer", "text": "Reading time divides your word count by 238 words per minute, a typical silent reading speed for adults. Slower or faster readers, and more technical text, will take a different amount of time." }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my text saved or uploaded anywhere?",
+        "acceptedAnswer": { "@type": "Answer", "text": "No. The counting happens in your browser. This page does not upload or store what you type or paste." }
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body class="bg-white text-slate-900 antialiased">
+
+  <!-- ============ HEADER ============ -->
+  <header class="sticky top-0 z-50 border-b border-slate-200 bg-white/85 backdrop-blur-md">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="flex h-16 items-center justify-between gap-3">
+
+        <!-- Logo -->
+        <a href="index.html" class="flex shrink-0 items-center gap-2.5" aria-label="heymicrotools home">
+          <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white shadow-sm">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z" />
+            </svg>
+          </span>
+          <span class="text-[17px] font-bold tracking-tight">hey<span class="text-brand">microtools</span></span>
+        </a>
+
+        <!-- Desktop category links -->
+        <nav class="hidden items-center gap-1 md:flex" aria-label="Tool categories">
+          <a href="index.html" class="rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">All</a>
+          <a href="index.html?category=finance" class="rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Finance</a>
+          <a href="index.html?category=daily" class="rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Daily Tools</a>
+          <a href="index.html?category=image" class="rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Image Tools</a>
+        </nav>
+
+        <!-- Search (sends the query to the homepage, which filters the tools) -->
+        <form action="index.html" method="get" role="search" class="relative w-full max-w-[230px] sm:max-w-xs">
+          <label for="search" class="sr-only">Search tools</label>
+          <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="search" name="q" type="search" autocomplete="off" placeholder="Search tools…"
+            class="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-9 text-sm text-slate-900 placeholder-slate-400 outline-none transition focus:border-brand focus:bg-white focus:ring-4 focus:ring-blue-100" />
+          <kbd class="pointer-events-none absolute right-2.5 top-1/2 hidden -translate-y-1/2 rounded border border-slate-200 bg-white px-1.5 text-[11px] font-medium text-slate-400 sm:block">/</kbd>
+        </form>
+      </div>
+
+      <!-- Mobile category links -->
+      <nav class="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-3 md:hidden" aria-label="Tool categories">
+        <a href="index.html" class="shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">All</a>
+        <a href="index.html?category=finance" class="shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Finance</a>
+        <a href="index.html?category=daily" class="shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Daily Tools</a>
+        <a href="index.html?category=image" class="shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Image Tools</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ TITLE ============ -->
+    <section class="border-b border-slate-100 bg-gradient-to-b from-slate-50/80 to-white">
+      <div class="mx-auto max-w-5xl px-4 pb-8 pt-8 sm:px-6 sm:pb-10 sm:pt-12">
+        <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
+          <ol class="flex flex-wrap items-center gap-1.5">
+            <li><a href="index.html" class="transition hover:text-brand">Home</a></li>
+            <li aria-hidden="true">/</li>
+            <li><a href="index.html?category=daily" class="transition hover:text-brand">Daily Tools</a></li>
+            <li aria-hidden="true">/</li>
+            <li class="font-medium text-slate-700" aria-current="page">Word Counter</li>
+          </ol>
+        </nav>
+        <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl">Word &amp; Character Counter</h1>
+        <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600">
+          Type or paste your text and see the word, character, sentence and paragraph counts update as you write, along with how long it takes to read.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ TOOL ============ -->
+    <section class="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
+
+      <!-- Stat cards -->
+      <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4" aria-label="Text statistics">
+        <div class="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+          <p class="text-sm font-medium text-slate-500">Words</p>
+          <p id="s-words" class="stat-num mt-1 text-3xl font-extrabold tracking-tight text-brand sm:text-4xl">0</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+          <p class="text-sm font-medium text-slate-500">Characters <span class="hidden text-slate-400 sm:inline">(with spaces)</span></p>
+          <p id="s-chars" class="stat-num mt-1 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">0</p>
+          <p class="mt-0.5 text-xs text-slate-400 sm:hidden">with spaces</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+          <p class="text-sm font-medium text-slate-500">Characters <span class="hidden text-slate-400 sm:inline">(no spaces)</span></p>
+          <p id="s-nospace" class="stat-num mt-1 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">0</p>
+          <p class="mt-0.5 text-xs text-slate-400 sm:hidden">without spaces</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+          <p class="text-sm font-medium text-slate-500">Sentences</p>
+          <p id="s-sent" class="stat-num mt-1 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">0</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+          <p class="text-sm font-medium text-slate-500">Paragraphs</p>
+          <p id="s-para" class="stat-num mt-1 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">0</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-4 sm:p-5">
+          <p class="text-sm font-medium text-slate-500">Reading time</p>
+          <p id="s-read" class="stat-num mt-1 text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl">0 sec</p>
+          <p class="mt-0.5 text-xs text-slate-400">at 238 words a minute</p>
+        </div>
+      </div>
+
+      <!-- Editor -->
+      <div class="mt-5 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_1px_2px_rgba(15,23,42,0.04),0_12px_32px_-12px_rgba(15,23,42,0.12)]">
+
+        <!-- Toolbar -->
+        <div class="flex flex-wrap items-center gap-2 border-b border-slate-200 bg-slate-50/70 p-3 sm:px-4">
+          <button type="button" id="btn-copy" data-action="copy" class="tool-btn inline-flex h-9 items-center gap-2 rounded-lg bg-brand px-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-dark focus:outline-none focus:ring-4 focus:ring-blue-200">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></svg>
+            <span id="copy-label">Copy Text</span>
+          </button>
+          <button type="button" data-action="clear" class="tool-btn inline-flex h-9 items-center rounded-lg border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100">Clear Text</button>
+          <span class="mx-1 hidden h-5 w-px bg-slate-200 sm:block" aria-hidden="true"></span>
+          <button type="button" data-action="upper" class="tool-btn inline-flex h-9 items-center rounded-lg border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100">UPPERCASE</button>
+          <button type="button" data-action="lower" class="tool-btn inline-flex h-9 items-center rounded-lg border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100">lowercase</button>
+          <button type="button" data-action="spaces" class="tool-btn inline-flex h-9 items-center rounded-lg border border-slate-200 bg-white px-3.5 text-sm font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100">Remove Extra Spaces</button>
+          <button type="button" id="btn-undo" class="pop ml-auto hidden h-9 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold text-brand transition hover:bg-brand-soft focus:outline-none focus:ring-4 focus:ring-blue-100">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
+            Undo
+          </button>
+        </div>
+
+        <label for="text" class="sr-only">Your text</label>
+        <textarea id="text" spellcheck="true" placeholder="Start typing or paste your text here…"
+          class="block w-full border-0 bg-white p-4 text-base leading-relaxed text-slate-900 placeholder-slate-400 outline-none focus:ring-0 sm:p-6"></textarea>
+
+        <div class="flex items-center justify-between gap-3 border-t border-slate-100 bg-slate-50/50 px-4 py-2.5 text-xs text-slate-500 sm:px-6">
+          <span class="inline-flex items-center gap-1.5">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+            Your text stays in your browser.
+          </span>
+          <span id="footer-count" class="stat-num">0 words</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ HOW TO USE ============ -->
+    <section class="border-t border-slate-100 bg-slate-50/60">
+      <div class="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+        <h2 class="text-2xl font-bold tracking-tight sm:text-3xl">How to use the word counter</h2>
+        <p class="mt-3 max-w-2xl text-slate-600">There is nothing to set up. Here is how most people use it.</p>
+
+        <ol class="mt-8 grid gap-4 sm:grid-cols-2">
+          <li class="flex gap-4 rounded-xl border border-slate-200 bg-white p-5">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-sm font-bold text-brand">1</span>
+            <div>
+              <h3 class="font-semibold">Add your text</h3>
+              <p class="mt-1 text-sm leading-relaxed text-slate-600">Type straight into the box or paste something you have already written. The numbers at the top change with every keystroke, so there is no button to press.</p>
+            </div>
+          </li>
+          <li class="flex gap-4 rounded-xl border border-slate-200 bg-white p-5">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-sm font-bold text-brand">2</span>
+            <div>
+              <h3 class="font-semibold">Check against your limit</h3>
+              <p class="mt-1 text-sm leading-relaxed text-slate-600">Writing for an essay, a tweet or a meta description? Use the word count or the character count that matches the limit you were given. Most platforms count spaces, so look at the "with spaces" figure first.</p>
+            </div>
+          </li>
+          <li class="flex gap-4 rounded-xl border border-slate-200 bg-white p-5">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-sm font-bold text-brand">3</span>
+            <div>
+              <h3 class="font-semibold">Tidy it up</h3>
+              <p class="mt-1 text-sm leading-relaxed text-slate-600">Use the buttons above the box to switch everything to capitals or lowercase, or to remove double spaces left behind by copying from a PDF or email. Made a mistake? Press Undo.</p>
+            </div>
+          </li>
+          <li class="flex gap-4 rounded-xl border border-slate-200 bg-white p-5">
+            <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-sm font-bold text-brand">4</span>
+            <div>
+              <h3 class="font-semibold">Copy it out</h3>
+              <p class="mt-1 text-sm leading-relaxed text-slate-600">Press Copy Text to put the finished version on your clipboard, or Clear Text to start again with a blank box.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="border-t border-slate-100">
+      <div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+        <h2 class="text-2xl font-bold tracking-tight sm:text-3xl">Frequently asked questions</h2>
+        <div class="mt-8 divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white">
+
+          <details class="group p-5 sm:px-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-base font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
+              How does the counter work out words, sentences and paragraphs?
+              <svg class="h-5 w-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-slate-600">Words are any groups of characters separated by spaces or line breaks, so "well-known" counts as one word. A sentence ends at a full stop, question mark or exclamation mark, and each line break also starts a new sentence. Paragraphs are the lines of text separated by a line break. Abbreviations like "e.g." can make the sentence count a little higher than you expect.</p>
+          </details>
+
+          <details class="group p-5 sm:px-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-base font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
+              How is the reading time calculated?
+              <svg class="h-5 w-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-slate-600">We divide your word count by 238 words per minute, a typical silent reading speed for adults. It is an estimate. Slower readers, technical writing and text in a second language will usually take longer.</p>
+          </details>
+
+          <details class="group p-5 sm:px-6">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-left text-base font-semibold text-slate-900 [&::-webkit-details-marker]:hidden">
+              Is my text saved or uploaded anywhere?
+              <svg class="h-5 w-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </summary>
+            <p class="mt-3 text-sm leading-relaxed text-slate-600">No. The counting happens in your browser, and this page does not upload or store what you type or paste. Once you close or refresh the page, the text is gone, so copy anything you want to keep.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="border-t border-slate-200 bg-white">
+    <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+      <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="lg:col-span-2">
+          <a href="index.html" class="inline-flex items-center gap-2.5" aria-label="heymicrotools home">
+            <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+            </span>
+            <span class="text-[17px] font-bold tracking-tight">hey<span class="text-brand">microtools</span></span>
+          </a>
+          <p class="mt-4 max-w-sm text-sm leading-relaxed text-slate-600">Free, focused calculators and utilities for everyday tasks. Simple to use and quick to load.</p>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-slate-900">Popular tools</h4>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><a class="text-slate-600 transition hover:text-brand" href="age-calculator.html">Age Calculator</a></li>
+            <li><a class="text-slate-600 transition hover:text-brand" href="percentage-calculator.html">Percentage Calculator</a></li>
+            <li><a class="text-slate-600 transition hover:text-brand" href="image-compressor.html">Image Compressor</a></li>
+            <li><a class="text-slate-600 transition hover:text-brand" href="word-counter.html">Word Counter</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-slate-900">Company</h4>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><a class="text-slate-600 transition hover:text-brand" href="about.html">About Us</a></li>
+            <li><a class="text-slate-600 transition hover:text-brand" href="contact.html">Contact Us</a></li>
+            <li><a class="text-slate-600 transition hover:text-brand" href="privacy-policy.html">Privacy Policy</a></li>
+            <li><a class="text-slate-600 transition hover:text-brand" href="terms-of-service.html">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 flex flex-col gap-3 border-t border-slate-200 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+        <p>&copy; <span id="year">2026</span> heymicrotools. All rights reserved.</p>
+        <p>Made for quick answers.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============ SCRIPT ============ -->
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var WPM = 238;
+
+      var ta = $('text');
+      var out = {
+        words: $('s-words'), chars: $('s-chars'), nospace: $('s-nospace'),
+        sent: $('s-sent'), para: $('s-para'), read: $('s-read'), footer: $('footer-count')
+      };
+      var undoBtn = $('btn-undo');
+      var copyLabel = $('copy-label');
+      var toolBtns = Array.prototype.slice.call(document.querySelectorAll('.tool-btn'));
+      var undoValue = null;
+
+      $('year').textContent = new Date().getFullYear();
+
+      /* ---------- counting ---------- */
+      function countWords(t) {
+        var m = t.match(/\S+/g);
+        return m ? m.length : 0;
+      }
+      function countChars(t) { return Array.from(t).length; }
+      function countSentences(t) {
+        if (!t.trim()) return 0;
+        // Split on . ! ? … (and Urdu/Arabic full stop & question mark) followed by space/end, or on line breaks.
+        var parts = t.split(/[.!?…۔؟]+["'”’)\]]*(?:\s+|$)|\n+/);
+        return parts.filter(function (s) { return /[\p{L}\p{N}]/u.test(s); }).length;
+      }
+      function countParagraphs(t) {
+        return t.split(/\r?\n/).filter(function (l) { return l.trim() !== ''; }).length;
+      }
+      function readingTime(words) {
+        if (!words) return '0 sec';
+        var secs = Math.max(1, Math.round(words / WPM * 60));
+        if (secs < 60) return secs + ' sec';
+        var m = Math.floor(secs / 60), s = secs % 60;
+        return s ? m + ' min ' + s + ' sec' : m + ' min';
+      }
+      var n = function (x) { return x.toLocaleString('en-US'); };
+
+      function update() {
+        var t = ta.value;
+        var words = countWords(t);
+        out.words.textContent = n(words);
+        out.chars.textContent = n(countChars(t));
+        out.nospace.textContent = n(countChars(t.replace(/\s/g, '')));
+        out.sent.textContent = n(countSentences(t));
+        out.para.textContent = n(countParagraphs(t));
+        out.read.textContent = readingTime(words);
+        out.footer.textContent = n(words) + (words === 1 ? ' word' : ' words');
+
+        var empty = t.length === 0;
+        toolBtns.forEach(function (b) { b.disabled = empty; });
+      }
+
+      /* ---------- auto-expanding textarea ---------- */
+      function resize() {
+        var y = window.pageYOffset;
+        ta.style.height = 'auto';
+        ta.style.height = (ta.scrollHeight + (ta.offsetHeight - ta.clientHeight)) + 'px';
+        window.scrollTo(window.pageXOffset, y);
+      }
+
+      /* ---------- undo ---------- */
+      function setUndo(prev) {
+        undoValue = prev;
+        undoBtn.classList.toggle('hidden', prev === null);
+        undoBtn.classList.toggle('inline-flex', prev !== null);
+      }
+
+      function setText(next) {
+        if (next === ta.value) return;
+        setUndo(ta.value);
+        ta.value = next;
+        update();
+        resize();
+        ta.focus();
+      }
+
+      /* ---------- actions ---------- */
+      function flash(label) {
+        copyLabel.textContent = label;
+        setTimeout(function () { copyLabel.textContent = 'Copy Text'; }, 1800);
+      }
+
+      function copyText() {
+        var text = ta.value;
+        if (!text) return;
+        var fallback = function () {
+          var tmp = document.createElement('textarea');
+          tmp.value = text; tmp.setAttribute('readonly', '');
+          tmp.style.position = 'fixed'; tmp.style.opacity = '0';
+          document.body.appendChild(tmp); tmp.select();
+          var ok = false;
+          try { ok = document.execCommand('copy'); } catch (e) {}
+          document.body.removeChild(tmp);
+          flash(ok ? 'Copied!' : 'Copy failed');
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(function () { flash('Copied!'); }, fallback);
+        } else {
+          fallback();
+        }
+      }
+
+      function removeExtraSpaces(v) {
+        return v
+          .replace(/\r\n?/g, '\n')
+          .replace(/[^\S\n]+/g, ' ')   // runs of spaces/tabs -> one space
+          .replace(/ ?\n ?/g, '\n')    // no spaces at line edges
+          .replace(/\n{3,}/g, '\n\n')  // at most one blank line in a row
+          .trim();
+      }
+
+      var actions = {
+        copy: copyText,
+        clear: function () { setText(''); },
+        upper: function () { setText(ta.value.toUpperCase()); },
+        lower: function () { setText(ta.value.toLowerCase()); },
+        spaces: function () { setText(removeExtraSpaces(ta.value)); }
+      };
+
+      toolBtns.forEach(function (b) {
+        b.addEventListener('click', function () {
+          var fn = actions[b.dataset.action];
+          if (fn) fn();
+        });
+      });
+
+      undoBtn.addEventListener('click', function () {
+        if (undoValue === null) return;
+        var restore = undoValue;
+        setUndo(null);
+        ta.value = restore;
+        update();
+        resize();
+        ta.focus();
+      });
+
+      /* ---------- events ---------- */
+      ta.addEventListener('input', function () {
+        if (undoValue !== null) setUndo(null);  // typing after a change replaces the undo point
+        update();
+        resize();
+      });
+      window.addEventListener('resize', resize);
+
+      // Press "/" (outside the text box) to jump to the header search
+      document.addEventListener('keydown', function (e) {
+        var tag = (document.activeElement && document.activeElement.tagName) || '';
+        if (e.key === '/' && tag !== 'INPUT' && tag !== 'TEXTAREA') {
+          e.preventDefault();
+          $('search').focus();
+        }
+      });
+
+      update();
+      resize();
+    })();
+  </script>
+</body>
+</html>

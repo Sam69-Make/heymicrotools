@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Age Calculator – Find your exact age in years, months and days | heymicrotools</title>
+<meta name="description" content="Free exact age calculator. Enter a date of birth to get your age in years, months and days, total weeks, total days and a countdown to your next birthday.">
+<link rel="canonical" href="https://heymicrotools.com/age-calculator.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'] },
+  colors: { brand: { DEFAULT: '#2563EB', dark: '#1D4ED8', soft: '#EFF4FF' } }
+}}}
+</script>
+<style>
+  :root { color-scheme: light; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-behavior: smooth; scroll-padding-top: 8rem; }
+  body { background: #fff; font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  :focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; border-radius: 6px; }
+  .filter-link[aria-current="true"] { color: #2563EB; background: #EFF4FF; }
+  .num { font-variant-numeric: tabular-nums; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  details[open] .chev { transform: rotate(180deg); }
+  input[type="date"] { min-height: 2.75rem; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    { "@type": "WebApplication", "name": "Age Calculator", "url": "https://heymicrotools.com/age-calculator.html", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } },
+    { "@type": "FAQPage", "mainEntity": [
+      { "@type": "Question", "name": "How does the calculator handle leap years and February 29 birthdays?", "acceptedAnswer": { "@type": "Answer", "text": "Leap days are counted exactly in the total days and total weeks. If you were born on February 29, your next birthday in a non-leap year is shown as March 1." } },
+      { "@type": "Question", "name": "Can I find my age on a past or future date?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Use the Age at the date of field to pick any date after the date of birth. It defaults to today." } },
+      { "@type": "Question", "name": "Is my date of birth stored or sent anywhere?", "acceptedAnswer": { "@type": "Answer", "text": "No. The calculation runs in your browser and your dates are never uploaded or saved." } }
+    ] }
+  ]
+}
+</script>
+</head>
+<body class="text-slate-900 font-sans antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur" style="padding-top: env(safe-area-inset-top, 0px)">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="flex h-16 items-center gap-4">
+      <a href="index.html" class="flex shrink-0 items-center gap-2 font-semibold tracking-tight" aria-label="heymicrotools home">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        </span>
+        <span class="text-[17px]">hey<span class="text-brand">micro</span>tools</span>
+      </a>
+
+      <nav class="ml-6 hidden items-center gap-1 md:flex" aria-label="Categories">
+        <a href="index.html#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">All</a>
+        <a href="index.html?cat=finance#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Finance</a>
+        <a href="index.html?cat=daily#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900" aria-current="true">Daily Tools</a>
+        <a href="index.html?cat=image#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Image Tools</a>
+      </nav>
+
+      <form action="index.html" method="get" role="search" class="relative ml-auto w-full max-w-[16rem] sm:max-w-xs">
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input name="q" type="search" placeholder="Search tools" autocomplete="off" aria-label="Search tools"
+          class="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm placeholder:text-slate-400 transition focus:border-brand focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand/10">
+      </form>
+    </div>
+
+    <nav class="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 pb-3 md:hidden" aria-label="Categories">
+      <a href="index.html#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">All</a>
+      <a href="index.html?cat=finance#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Finance</a>
+      <a href="index.html?cat=daily#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600" aria-current="true">Daily Tools</a>
+      <a href="index.html?cat=image#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Image Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Title -->
+  <section class="border-b border-slate-200" style="background-image: radial-gradient(#E2E8F0 1px, transparent 1px); background-size: 22px 22px;">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+      <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
+        <a href="index.html" class="hover:text-brand">Home</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <a href="index.html?cat=daily#tools" class="hover:text-brand">Daily Tools</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <span class="text-slate-700">Age Calculator</span>
+      </nav>
+      <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">Age Calculator</h1>
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+        Enter a date of birth and see your exact age in years, months and days, plus how long until your next birthday.
+      </p>
+    </div>
+  </section>
+
+  <!-- Tool -->
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
+
+      <!-- Inputs -->
+      <div class="h-fit rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_12px_32px_-12px_rgba(15,23,42,.12)] sm:p-6">
+        <h2 class="text-sm font-semibold">Your dates</h2>
+
+        <div class="mt-4">
+          <label for="dob" class="block text-sm font-medium text-slate-700">Date of birth</label>
+          <input id="dob" type="date" min="1900-01-01" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-3 text-[15px] text-slate-900 transition focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10">
+        </div>
+
+        <div class="mt-4">
+          <label for="at" class="block text-sm font-medium text-slate-700">Age at the date of <span class="font-normal text-slate-400">(optional)</span></label>
+          <input id="at" type="date" min="1900-01-01" class="mt-1.5 w-full rounded-lg border border-slate-200 bg-white px-3 text-[15px] text-slate-900 transition focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10">
+          <p class="mt-1.5 text-xs text-slate-500">Leave as today, or pick any other date.</p>
+        </div>
+
+        <p id="error" role="alert" class="mt-4 hidden rounded-lg border border-red-200 bg-red-50 px-3 py-2.5 text-sm text-red-700"></p>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <button id="copy" type="button" disabled class="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-brand px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none sm:flex-none">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <span id="copy-label">Copy result</span>
+          </button>
+          <button id="reset" type="button" class="inline-flex h-11 flex-1 items-center justify-center rounded-lg border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-300 hover:bg-slate-50 sm:flex-none">Reset</button>
+        </div>
+      </div>
+
+      <!-- Results -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6" aria-live="polite">
+        <div id="placeholder" class="flex min-h-[18rem] flex-col items-center justify-center text-center">
+          <span class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-soft text-brand">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="17" rx="2.5"/><path d="M8 2.5v4M16 2.5v4M3 10h18"/></svg>
+          </span>
+          <p class="mt-4 font-semibold">Add a date of birth to begin</p>
+          <p class="mt-1 max-w-xs text-sm text-slate-600">Your age appears here as soon as you pick a date.</p>
+        </div>
+
+        <div id="results" class="hidden">
+          <p class="text-sm text-slate-500">Age on <span id="r-date" class="font-medium text-slate-700"></span></p>
+          <p id="r-headline" class="num mt-1 text-2xl font-bold tracking-tight sm:text-3xl"></p>
+
+          <dl class="mt-5 grid grid-cols-3 gap-3">
+            <div class="rounded-xl bg-brand-soft px-3 py-4 text-center sm:px-4">
+              <dd id="r-y" class="num text-3xl font-bold text-brand sm:text-4xl">0</dd>
+              <dt class="mt-1 text-xs font-medium text-slate-600">Years</dt>
+            </div>
+            <div class="rounded-xl bg-brand-soft px-3 py-4 text-center sm:px-4">
+              <dd id="r-m" class="num text-3xl font-bold text-brand sm:text-4xl">0</dd>
+              <dt class="mt-1 text-xs font-medium text-slate-600">Months</dt>
+            </div>
+            <div class="rounded-xl bg-brand-soft px-3 py-4 text-center sm:px-4">
+              <dd id="r-d" class="num text-3xl font-bold text-brand sm:text-4xl">0</dd>
+              <dt class="mt-1 text-xs font-medium text-slate-600">Days</dt>
+            </div>
+          </dl>
+
+          <dl class="mt-3 grid gap-3 sm:grid-cols-2">
+            <div class="rounded-xl border border-slate-200 px-4 py-3.5">
+              <dt class="text-xs font-medium text-slate-500">Total weeks</dt>
+              <dd id="r-w" class="num mt-1 text-xl font-semibold"></dd>
+              <dd id="r-wd" class="num text-xs text-slate-500"></dd>
+            </div>
+            <div class="rounded-xl border border-slate-200 px-4 py-3.5">
+              <dt class="text-xs font-medium text-slate-500">Total days</dt>
+              <dd id="r-td" class="num mt-1 text-xl font-semibold"></dd>
+              <dd id="r-th" class="num text-xs text-slate-500"></dd>
+            </div>
+          </dl>
+
+          <div class="mt-3 rounded-xl border border-brand/30 bg-white px-4 py-4">
+            <p class="text-xs font-medium text-slate-500">Next birthday</p>
+            <p id="r-cd" class="num mt-1 text-2xl font-bold tracking-tight"></p>
+            <p id="r-cd2" class="mt-1 text-sm text-slate-600"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to use -->
+  <section class="border-t border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-16">
+      <h2 class="text-2xl font-bold tracking-tight">How to use the age calculator</h2>
+      <p class="mt-3 leading-relaxed text-slate-600">
+        It takes about ten seconds. You only need a date of birth, and the results update as you type, so there is no calculate button to hunt for.
+      </p>
+      <ol class="mt-6 space-y-5">
+        <li class="flex gap-4">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">1</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Enter the date of birth.</strong> Tap the first field and choose a date from the picker, or type it in. On a phone you will get your device’s native date wheel.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">2</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Choose a comparison date, if you need one.</strong> The second field starts on today’s date. Change it to see how old someone was on a past date, such as a job start or a wedding, or how old they will be on a future one.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">3</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Read your results.</strong> You will see the exact age in years, months and days, the same age expressed as total weeks and total days, and how many days remain until the next birthday.</p>
+        </li>
+        <li class="flex gap-4">
+          <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand text-sm font-semibold text-white">4</span>
+          <p class="leading-relaxed text-slate-700"><strong class="font-semibold text-slate-900">Copy or start over.</strong> Press Copy result to paste a plain-text summary into a form or message. Press Reset to clear the birth date and return the second field to today.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="border-t border-slate-200">
+    <div class="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-16">
+      <h2 class="text-2xl font-bold tracking-tight">Frequently asked questions</h2>
+      <div class="mt-6 divide-y divide-slate-200 rounded-xl border border-slate-200">
+        <details class="group p-5" open>
+          <summary class="flex items-center justify-between gap-4 font-semibold">
+            How does the calculator handle leap years and February 29 birthdays?
+            <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 leading-relaxed text-slate-600">Every leap day between the two dates is counted, so the total days and total weeks are exact. Years and months are counted as whole calendar months from the birth date, and the leftover days are what remains after that. If you were born on February 29, the calculator treats March 1 as your birthday in years that have no leap day.</p>
+        </details>
+        <details class="group p-5">
+          <summary class="flex items-center justify-between gap-4 font-semibold">
+            Can I find my age on a past or future date?
+            <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 leading-relaxed text-slate-600">Yes. Set the “Age at the date of” field to any date on or after the date of birth. This is handy for checking eligibility on a deadline, such as school admission cut-offs, or for working out how old someone was when something happened. The next-birthday countdown is measured from whichever date you choose.</p>
+        </details>
+        <details class="group p-5">
+          <summary class="flex items-center justify-between gap-4 font-semibold">
+            Is my date of birth stored or sent anywhere?
+            <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </summary>
+          <p class="mt-3 leading-relaxed text-slate-600">No. The calculation runs entirely in your browser. The dates you enter are not uploaded, saved or shared, and they are gone as soon as you close or refresh the page.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6" style="padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px))">
+    <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+      <div class="max-w-xs">
+        <a href="index.html" class="flex items-center gap-2 font-semibold tracking-tight">
+          <span class="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-white">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+          </span>
+          hey<span class="text-brand">micro</span>tools
+        </a>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">Simple, private tools for everyday tasks.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-10 sm:gap-16">
+        <div>
+          <h4 class="text-sm font-semibold">Company</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="about.html" class="transition-colors hover:text-brand">About Us</a></li>
+            <li><a href="contact.html" class="transition-colors hover:text-brand">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold">Legal</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="privacy-policy.html" class="transition-colors hover:text-brand">Privacy Policy</a></li>
+            <li><a href="terms-of-service.html" class="transition-colors hover:text-brand">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500">
+      © <span id="year">2026</span> heymicrotools. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var dob = $('dob'), at = $('at'), err = $('error'), copyBtn = $('copy'), copyLabel = $('copy-label');
+  var lastText = '';
+  var DAY = 86400000;
+
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function todayStr() { var n = new Date(); return n.getFullYear() + '-' + pad(n.getMonth() + 1) + '-' + pad(n.getDate()); }
+  function parse(s) { var p = s.split('-'); return { y: +p[0], m: +p[1], d: +p[2] }; }
+  function utc(o) { return Date.UTC(o.y, o.m - 1, o.d); }
+  function fromTs(ts) { var x = new Date(ts); return { y: x.getUTCFullYear(), m: x.getUTCMonth() + 1, d: x.getUTCDate() }; }
+  function dim(y, m) { return new Date(Date.UTC(y, m, 0)).getUTCDate(); }
+  function fmtNum(n) { return n.toLocaleString('en-US'); }
+  function fmtDate(ts, long) {
+    return new Date(ts).toLocaleDateString('en-US', { timeZone: 'UTC', weekday: long ? 'long' : undefined, year: 'numeric', month: 'long', day: 'numeric' });
+  }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
+
+  // Whole calendar months from a to b (day clamped to month end), plus leftover days.
+  function span(a, b) {
+    var bTs = utc(b);
+    var months = (b.y - a.y) * 12 + (b.m - a.m);
+    function anchor(n) {
+      var idx = a.m - 1 + n, yy = a.y + Math.floor(idx / 12), mm = idx % 12 + 1;
+      return Date.UTC(yy, mm - 1, Math.min(a.d, dim(yy, mm)));
+    }
+    if (anchor(months) > bTs) months--;
+    return { months: months, days: Math.round((bTs - anchor(months)) / DAY) };
+  }
+
+  function showError(msg) {
+    err.textContent = msg; err.classList.remove('hidden');
+    $('results').classList.add('hidden'); $('placeholder').classList.remove('hidden');
+    copyBtn.disabled = true; lastText = '';
+  }
+
+  function calculate() {
+    err.classList.add('hidden');
+    if (!dob.value) {
+      $('results').classList.add('hidden'); $('placeholder').classList.remove('hidden');
+      copyBtn.disabled = true; lastText = ''; return;
+    }
+    if (!at.value) at.value = todayStr();
+    var b = parse(dob.value), t = parse(at.value);
+    var bTs = utc(b), tTs = utc(t);
+    if (isNaN(bTs) || isNaN(tTs)) return;
+    if (b.y < 1900) { showError('Enter a date of birth from 1900 onward.'); return; }
+    if (bTs > tTs) { showError('The date of birth is after the comparison date. Choose a birth date that comes first.'); return; }
+
+    var s = span(b, t);
+    var years = Math.floor(s.months / 12), months = s.months % 12, days = s.days;
+    var totalDays = Math.round((tTs - bTs) / DAY);
+    var weeks = Math.floor(totalDays / 7), remDays = totalDays % 7;
+
+    // Next birthday (Feb 29 rolls to Mar 1 in non-leap years)
+    var year = t.y, cand = Date.UTC(year, b.m - 1, b.d);
+    if (cand < tTs) { year++; cand = Date.UTC(year, b.m - 1, b.d); }
+    var untilDays = Math.round((cand - tTs) / DAY);
+    var turning = year - b.y;
+    var cs = span(t, fromTs(cand));
+
+    var headline = plural(years, 'year') + ', ' + plural(months, 'month') + ', ' + plural(days, 'day');
+    $('r-date').textContent = fmtDate(tTs, true);
+    $('r-headline').textContent = headline;
+    $('r-y').textContent = fmtNum(years); $('r-m').textContent = months; $('r-d').textContent = days;
+    $('r-w').textContent = fmtNum(weeks) + (weeks === 1 ? ' week' : ' weeks');
+    $('r-wd').textContent = '+ ' + plural(remDays, 'day');
+    $('r-td').textContent = fmtNum(totalDays) + (totalDays === 1 ? ' day' : ' days');
+    $('r-th').textContent = '≈ ' + fmtNum(totalDays * 24) + ' hours';
+
+    var cdText, cdSub;
+    if (untilDays === 0) {
+      cdText = 'Today is the birthday!';
+      cdSub = 'Turning ' + turning + ' on ' + fmtDate(cand, true) + '.';
+    } else {
+      cdText = plural(untilDays, 'day') + ' to go';
+      var parts = [];
+      if (cs.months) parts.push(plural(cs.months, 'month'));
+      if (cs.days) parts.push(plural(cs.days, 'day'));
+      cdSub = (parts.length && untilDays > 31 ? parts.join(', ') + '. ' : '') + 'Turning ' + turning + ' on ' + fmtDate(cand, true) + '.';
+    }
+    $('r-cd').textContent = cdText; $('r-cd2').textContent = cdSub;
+
+    lastText = 'Age on ' + fmtDate(tTs, false) + ': ' + headline + '\n' +
+      'Total weeks: ' + fmtNum(weeks) + ' (+ ' + plural(remDays, 'day') + ')\n' +
+      'Total days: ' + fmtNum(totalDays) + '\n' +
+      'Next birthday: ' + (untilDays === 0 ? 'today' : 'in ' + plural(untilDays, 'day')) + ' (' + fmtDate(cand, true) + ', turning ' + turning + ')';
+
+    $('placeholder').classList.add('hidden'); $('results').classList.remove('hidden');
+    copyBtn.disabled = false;
+  }
+
+  function flash(label) {
+    copyLabel.textContent = label;
+    setTimeout(function () { copyLabel.textContent = 'Copy result'; }, 1800);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); return ok;
+  }
+  copyBtn.addEventListener('click', function () {
+    if (!lastText) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastText).then(function () { flash('Copied'); }, function () { flash(fallbackCopy(lastText) ? 'Copied' : 'Copy failed'); });
+    } else { flash(fallbackCopy(lastText) ? 'Copied' : 'Copy failed'); }
+  });
+
+  $('reset').addEventListener('click', function () {
+    dob.value = ''; at.value = todayStr(); calculate(); dob.focus();
+  });
+
+  var today = todayStr();
+  at.value = today; dob.max = today;
+  dob.addEventListener('input', calculate); dob.addEventListener('change', calculate);
+  at.addEventListener('input', calculate); at.addEventListener('change', calculate);
+  $('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

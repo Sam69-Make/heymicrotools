@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Percentage Calculator – Percent of a number, percent change and more | heymicrotools</title>
+<meta name="description" content="Free all-in-one percentage calculator. Work out X% of Y, find what percent one number is of another, and calculate percentage increase or decrease. Results update as you type.">
+<link rel="canonical" href="https://heymicrotools.com/percentage-calculator.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'] },
+  colors: { brand: { DEFAULT: '#2563EB', dark: '#1D4ED8', soft: '#EFF4FF' } }
+}}}
+</script>
+<style type="text/tailwindcss">
+  @layer components {
+    .field-wrap { @apply flex items-center overflow-hidden rounded-lg border border-slate-200 bg-white focus-within:border-brand focus-within:ring-4 focus-within:ring-brand/10; }
+    .field { @apply h-11 w-full border-0 bg-transparent px-3 text-[15px] tabular-nums text-slate-900 focus:outline-none; }
+    .suffix { @apply border-l border-slate-200 bg-slate-50 px-3.5 py-3 text-sm text-slate-500; }
+    .lbl { @apply mb-1.5 block text-sm font-medium text-slate-700; }
+    .formula { @apply rounded-lg border border-slate-200 bg-white px-4 py-3 text-[15px] font-medium tabular-nums text-slate-900; }
+  }
+</style>
+<style>
+  :root { color-scheme: light; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-behavior: smooth; scroll-padding-top: 8rem; }
+  body { background: #fff; font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  :focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; border-radius: 6px; }
+  .filter-link[aria-current="true"] { color: #2563EB; background: #EFF4FF; }
+  .num { font-variant-numeric: tabular-nums; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "WebApplication", "name": "Percentage Calculator", "url": "https://heymicrotools.com/percentage-calculator.html", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" } }
+</script>
+</head>
+<body class="text-slate-900 font-sans antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur" style="padding-top: env(safe-area-inset-top, 0px)">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="flex h-16 items-center gap-4">
+      <a href="index.html" class="flex shrink-0 items-center gap-2 font-semibold tracking-tight" aria-label="heymicrotools home">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        </span>
+        <span class="text-[17px]">hey<span class="text-brand">micro</span>tools</span>
+      </a>
+
+      <nav class="ml-6 hidden items-center gap-1 md:flex" aria-label="Categories">
+        <a href="index.html#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">All</a>
+        <a href="index.html?cat=finance#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900" aria-current="true">Finance</a>
+        <a href="index.html?cat=daily#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Daily Tools</a>
+        <a href="index.html?cat=image#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Image Tools</a>
+      </nav>
+
+      <form action="index.html" method="get" role="search" class="relative ml-auto w-full max-w-[16rem] sm:max-w-xs">
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input name="q" type="search" placeholder="Search tools" autocomplete="off" aria-label="Search tools"
+          class="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm placeholder:text-slate-400 transition focus:border-brand focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand/10">
+      </form>
+    </div>
+
+    <nav class="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 pb-3 md:hidden" aria-label="Categories">
+      <a href="index.html#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">All</a>
+      <a href="index.html?cat=finance#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600" aria-current="true">Finance</a>
+      <a href="index.html?cat=daily#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Daily Tools</a>
+      <a href="index.html?cat=image#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Image Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Title -->
+  <section class="border-b border-slate-200" style="background-image: radial-gradient(#E2E8F0 1px, transparent 1px); background-size: 22px 22px;">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+      <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
+        <a href="index.html" class="hover:text-brand">Home</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <a href="index.html?cat=finance#tools" class="hover:text-brand">Finance</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <span class="text-slate-700">Percentage Calculator</span>
+      </nav>
+      <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">Percentage Calculator</h1>
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+        Three common percentage questions on one page. Type in any card and the answer appears right away.
+      </p>
+    </div>
+  </section>
+
+  <!-- Calculators -->
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+    <div class="grid gap-5 lg:grid-cols-3">
+
+      <!-- Card 1 -->
+      <div id="percent-of" class="flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_12px_32px_-12px_rgba(15,23,42,.12)] sm:p-6">
+        <h2 class="text-lg font-semibold tracking-tight">What is X% of Y?</h2>
+        <p class="mt-1 text-sm text-slate-600">Find a share of a number, such as a discount, tip or tax.</p>
+        <div class="mt-5 space-y-4">
+          <div>
+            <label for="a-x" class="lbl">Percentage (X)</label>
+            <div class="field-wrap"><input id="a-x" class="field" type="number" inputmode="decimal" step="any" value="18"><span class="suffix">%</span></div>
+          </div>
+          <div>
+            <label for="a-y" class="lbl">Of this number (Y)</label>
+            <div class="field-wrap"><input id="a-y" class="field" type="number" inputmode="decimal" step="any" value="2450"></div>
+          </div>
+        </div>
+        <div class="mt-auto pt-6">
+          <div class="rounded-xl bg-brand-soft p-4" aria-live="polite">
+            <p class="text-xs font-medium text-slate-500">Result</p>
+            <p id="a-res" class="num mt-1 break-words text-3xl font-bold tracking-tight text-brand">–</p>
+            <p id="a-formula" class="num mt-2 min-h-[1.25rem] break-words text-sm text-slate-600"></p>
+          </div>
+          <button id="a-copy" type="button" disabled class="copy mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400 disabled:hover:border-slate-200 disabled:hover:bg-white">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <span class="copy-label">Copy result</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div id="what-percent" class="flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_12px_32px_-12px_rgba(15,23,42,.12)] sm:p-6">
+        <h2 class="text-lg font-semibold tracking-tight">X is what percent of Y?</h2>
+        <p class="mt-1 text-sm text-slate-600">Turn a part and a whole into a percentage, like a test score.</p>
+        <div class="mt-5 space-y-4">
+          <div>
+            <label for="b-x" class="lbl">Part (X)</label>
+            <div class="field-wrap"><input id="b-x" class="field" type="number" inputmode="decimal" step="any" value="45"></div>
+          </div>
+          <div>
+            <label for="b-y" class="lbl">Whole (Y)</label>
+            <div class="field-wrap"><input id="b-y" class="field" type="number" inputmode="decimal" step="any" value="180"></div>
+          </div>
+        </div>
+        <div class="mt-auto pt-6">
+          <div class="rounded-xl bg-brand-soft p-4" aria-live="polite">
+            <p class="text-xs font-medium text-slate-500">Result</p>
+            <p id="b-res" class="num mt-1 break-words text-3xl font-bold tracking-tight text-brand">–</p>
+            <p id="b-formula" class="num mt-2 min-h-[1.25rem] break-words text-sm text-slate-600"></p>
+          </div>
+          <button id="b-copy" type="button" disabled class="copy mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400 disabled:hover:border-slate-200 disabled:hover:bg-white">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <span class="copy-label">Copy result</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div id="percent-change" class="flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_12px_32px_-12px_rgba(15,23,42,.12)] sm:p-6">
+        <h2 class="text-lg font-semibold tracking-tight">Percentage change from X to Y</h2>
+        <p class="mt-1 text-sm text-slate-600">See how much a value went up or down, such as a price or a balance.</p>
+        <div class="mt-5 space-y-4">
+          <div>
+            <label for="c-x" class="lbl">From (X)</label>
+            <div class="field-wrap"><input id="c-x" class="field" type="number" inputmode="decimal" step="any" value="80"></div>
+          </div>
+          <div>
+            <label for="c-y" class="lbl">To (Y)</label>
+            <div class="field-wrap"><input id="c-y" class="field" type="number" inputmode="decimal" step="any" value="100"></div>
+          </div>
+        </div>
+        <div class="mt-auto pt-6">
+          <div class="rounded-xl bg-brand-soft p-4" aria-live="polite">
+            <p id="c-label" class="text-xs font-medium text-slate-500">Result</p>
+            <p id="c-res" class="num mt-1 break-words text-3xl font-bold tracking-tight text-brand">–</p>
+            <p id="c-formula" class="num mt-2 min-h-[1.25rem] break-words text-sm text-slate-600"></p>
+          </div>
+          <button id="c-copy" type="button" disabled class="copy mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:text-slate-400 disabled:hover:border-slate-200 disabled:hover:bg-white">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <span class="copy-label">Copy result</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Formulas & examples -->
+  <section class="border-t border-slate-200 bg-slate-50">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-16">
+      <h2 class="text-2xl font-bold tracking-tight">Formulas and examples</h2>
+      <p class="mt-3 max-w-2xl leading-relaxed text-slate-600">
+        Every calculation above comes down to one short formula. Here is each one with a worked example you can check by hand.
+      </p>
+
+      <div class="mt-8 grid gap-5 lg:grid-cols-3">
+        <div class="rounded-xl border border-slate-200 bg-white p-5">
+          <h3 class="font-semibold">X% of Y</h3>
+          <p class="formula mt-3">X ÷ 100 × Y</p>
+          <p class="mt-4 text-sm leading-relaxed text-slate-600"><strong class="font-semibold text-slate-900">Example:</strong> a jacket costs 80 and is 20% off. The discount is 20 ÷ 100 × 80 = 16, so you pay 80 − 16 = 64.</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-5">
+          <h3 class="font-semibold">X is what percent of Y</h3>
+          <p class="formula mt-3">X ÷ Y × 100</p>
+          <p class="mt-4 text-sm leading-relaxed text-slate-600"><strong class="font-semibold text-slate-900">Example:</strong> you scored 32 out of 40. That is 32 ÷ 40 × 100 = 80%.</p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-5">
+          <h3 class="font-semibold">Percentage change from X to Y</h3>
+          <p class="formula mt-3">(Y − X) ÷ X × 100</p>
+          <p class="mt-4 text-sm leading-relaxed text-slate-600"><strong class="font-semibold text-slate-900">Example:</strong> rent goes from 50 to 65. The change is (65 − 50) ÷ 50 × 100 = +30%. A drop from 80 to 60 is (60 − 80) ÷ 80 × 100 = −25%.</p>
+        </div>
+      </div>
+
+      <h3 class="mt-12 font-semibold">Everyday quick checks</h3>
+      <div class="mt-4 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+        <table class="w-full min-w-[32rem] text-left text-sm">
+          <thead class="border-b border-slate-200 bg-slate-50 text-slate-600">
+            <tr><th class="px-4 py-3 font-medium">Situation</th><th class="px-4 py-3 font-medium">Calculation</th><th class="px-4 py-3 font-medium">Answer</th></tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200 tabular-nums">
+            <tr><td class="px-4 py-3">15% tip on a 60 bill</td><td class="px-4 py-3">15% of 60</td><td class="px-4 py-3 font-medium">9</td></tr>
+            <tr><td class="px-4 py-3">8% sales tax on a 45 item</td><td class="px-4 py-3">8% of 45</td><td class="px-4 py-3 font-medium">3.60</td></tr>
+            <tr><td class="px-4 py-3">Finished 45 of 180 tasks</td><td class="px-4 py-3">45 is what % of 180</td><td class="px-4 py-3 font-medium">25%</td></tr>
+            <tr><td class="px-4 py-3">Followers grew from 1,200 to 1,500</td><td class="px-4 py-3">Change from 1,200 to 1,500</td><td class="px-4 py-3 font-medium">+25%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-8 max-w-3xl rounded-xl border border-brand/30 bg-white p-5">
+        <h3 class="font-semibold">Why +20% then −20% doesn’t get you back</h3>
+        <p class="mt-2 text-sm leading-relaxed text-slate-600">Each percentage applies to a different starting number. Start at 100, add 20% and you have 120. Take 20% off that and you have 96, not 100. To undo a 25% drop you need a 33.3% rise. Keep this in mind whenever you compare changes in prices, investments or traffic.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6" style="padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px))">
+    <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+      <div class="max-w-xs">
+        <a href="index.html" class="flex items-center gap-2 font-semibold tracking-tight">
+          <span class="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-white">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+          </span>
+          hey<span class="text-brand">micro</span>tools
+        </a>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">Simple, private tools for everyday tasks.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-10 sm:gap-16">
+        <div>
+          <h4 class="text-sm font-semibold">Company</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="about.html" class="transition-colors hover:text-brand">About Us</a></li>
+            <li><a href="contact.html" class="transition-colors hover:text-brand">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold">Legal</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="privacy-policy.html" class="transition-colors hover:text-brand">Privacy Policy</a></li>
+            <li><a href="terms-of-service.html" class="transition-colors hover:text-brand">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500">
+      © <span id="year">2026</span> heymicrotools. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+
+  function val(id) { var v = parseFloat($(id).value); return isNaN(v) || !isFinite(v) ? null : v; }
+  function fmt(n) {
+    n = Number(n.toPrecision(12));
+    return n.toLocaleString('en-US', { maximumFractionDigits: 6 });
+  }
+
+  // Each card writes to its own result, formula line and copy text.
+  var copyText = { a: '', b: '', c: '' };
+
+  function show(k, res, formula, copy, isError) {
+    $(k + '-res').textContent = res;
+    var f = $(k + '-formula');
+    f.textContent = formula;
+    f.classList.toggle('text-red-600', !!isError);
+    f.classList.toggle('text-slate-600', !isError);
+    copyText[k] = copy || '';
+    $(k + '-copy').disabled = !copy;
+  }
+
+  function calcA() {
+    var x = val('a-x'), y = val('a-y');
+    if (x === null || y === null) return show('a', '–', 'Enter both numbers.', '');
+    var r = x * y / 100;
+    show('a', fmt(r), fmt(x) + '% × ' + fmt(y) + ' ÷ 100 = ' + fmt(r), fmt(x) + '% of ' + fmt(y) + ' = ' + fmt(r));
+  }
+
+  function calcB() {
+    var x = val('b-x'), y = val('b-y');
+    if (x === null || y === null) return show('b', '–', 'Enter both numbers.', '');
+    if (y === 0) return show('b', '–', 'The whole (Y) can’t be zero.', '', true);
+    var r = x / y * 100;
+    show('b', fmt(r) + '%', fmt(x) + ' ÷ ' + fmt(y) + ' × 100 = ' + fmt(r) + '%', fmt(x) + ' is ' + fmt(r) + '% of ' + fmt(y));
+  }
+
+  function calcC() {
+    var x = val('c-x'), y = val('c-y');
+    var label = $('c-label');
+    if (x === null || y === null) { label.textContent = 'Result'; return show('c', '–', 'Enter both numbers.', ''); }
+    if (x === 0) { label.textContent = 'Result'; return show('c', '–', 'The starting value (X) can’t be zero.', '', true); }
+    var diff = y - x, r = diff / Math.abs(x) * 100;
+    var dir = r > 0 ? 'increase' : r < 0 ? 'decrease' : 'no change';
+    var sign = r > 0 ? '+' : r < 0 ? '−' : '';
+    var pct = sign + fmt(Math.abs(r)) + '%';
+    label.textContent = r === 0 ? 'No change' : 'Percentage ' + dir;
+    var detail = r === 0 ? 'The values are equal.' : 'A ' + dir + ' of ' + fmt(Math.abs(diff)) + '. (' + fmt(y) + ' − ' + fmt(x) + ') ÷ ' + fmt(Math.abs(x)) + ' × 100';
+    show('c', pct, detail, 'Change from ' + fmt(x) + ' to ' + fmt(y) + ': ' + pct + (r === 0 ? '' : ' (' + dir + ' of ' + fmt(Math.abs(diff)) + ')'));
+  }
+
+  ['a-x', 'a-y'].forEach(function (id) { $(id).addEventListener('input', calcA); });
+  ['b-x', 'b-y'].forEach(function (id) { $(id).addEventListener('input', calcB); });
+  ['c-x', 'c-y'].forEach(function (id) { $(id).addEventListener('input', calcC); });
+
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); return ok;
+  }
+  ['a', 'b', 'c'].forEach(function (k) {
+    var btn = $(k + '-copy'), label = btn.querySelector('.copy-label');
+    function flash(t) { label.textContent = t; setTimeout(function () { label.textContent = 'Copy result'; }, 1800); }
+    btn.addEventListener('click', function () {
+      var text = copyText[k];
+      if (!text) return;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { flash('Copied'); }, function () { flash(fallbackCopy(text) ? 'Copied' : 'Copy failed'); });
+      } else { flash(fallbackCopy(text) ? 'Copied' : 'Copy failed'); }
+    });
+  });
+
+  calcA(); calcB(); calcC();
+  $('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

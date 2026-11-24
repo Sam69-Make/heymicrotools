@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact Us – Report a bug, suggest a tool or ask a question | heymicrotools</title>
+<meta name="description" content="Get in touch with heymicrotools. Report a bug, suggest a new calculator or ask a general question. We reply within 24 to 48 hours.">
+<link rel="canonical" href="https://heymicrotools.com/contact.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+tailwind.config = { theme: { extend: {
+  fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'] },
+  colors: { brand: { DEFAULT: '#2563EB', dark: '#1D4ED8', soft: '#EFF4FF' } }
+}}}
+</script>
+<style type="text/tailwindcss">
+  @layer components {
+    .lbl { @apply mb-1.5 block text-sm font-medium text-slate-700; }
+    .input { @apply w-full rounded-lg border border-slate-200 bg-white px-3 text-[15px] text-slate-900 transition placeholder:text-slate-400 focus:border-brand focus:outline-none focus:ring-4 focus:ring-brand/10; }
+    .input[aria-invalid="true"] { @apply border-red-400 focus:border-red-500 focus:ring-red-500/10; }
+    .err { @apply mt-1.5 hidden text-sm text-red-600; }
+  }
+</style>
+<style>
+  :root { color-scheme: light; box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  html { scroll-behavior: smooth; scroll-padding-top: 8rem; }
+  body { background: #fff; font-feature-settings: "cv11", "ss01"; -webkit-font-smoothing: antialiased; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+  :focus-visible { outline: 2px solid #2563EB; outline-offset: 2px; border-radius: 6px; }
+  .filter-link[aria-current="true"] { color: #2563EB; background: #EFF4FF; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  details[open] .chev { transform: rotate(180deg); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+</style>
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "ContactPage", "name": "Contact heymicrotools", "url": "https://heymicrotools.com/contact.html", "mainEntity": { "@type": "Organization", "name": "heymicrotools", "url": "https://heymicrotools.com/", "contactPoint": { "@type": "ContactPoint", "contactType": "customer support", "email": "support@heymicrotools.com" } } }
+</script>
+</head>
+<body class="text-slate-900 font-sans antialiased">
+
+<!-- Header -->
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur" style="padding-top: env(safe-area-inset-top, 0px)">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="flex h-16 items-center gap-4">
+      <a href="index.html" class="flex shrink-0 items-center gap-2 font-semibold tracking-tight" aria-label="heymicrotools home">
+        <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+        </span>
+        <span class="text-[17px]">hey<span class="text-brand">micro</span>tools</span>
+      </a>
+
+      <nav class="ml-6 hidden items-center gap-1 md:flex" aria-label="Categories">
+        <a href="index.html#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">All</a>
+        <a href="index.html?cat=finance#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Finance</a>
+        <a href="index.html?cat=daily#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Daily Tools</a>
+        <a href="index.html?cat=image#tools" class="filter-link rounded-md px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900">Image Tools</a>
+      </nav>
+
+      <form action="index.html" method="get" role="search" class="relative ml-auto w-full max-w-[16rem] sm:max-w-xs">
+        <svg class="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <input name="q" type="search" placeholder="Search tools" autocomplete="off" aria-label="Search tools"
+          class="h-10 w-full rounded-lg border border-slate-200 bg-slate-50 pl-9 pr-3 text-sm placeholder:text-slate-400 transition focus:border-brand focus:bg-white focus:outline-none focus:ring-4 focus:ring-brand/10">
+      </form>
+    </div>
+
+    <nav class="no-scrollbar -mx-4 flex gap-1 overflow-x-auto px-4 pb-3 md:hidden" aria-label="Categories">
+      <a href="index.html#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">All</a>
+      <a href="index.html?cat=finance#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Finance</a>
+      <a href="index.html?cat=daily#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Daily Tools</a>
+      <a href="index.html?cat=image#tools" class="filter-link shrink-0 rounded-full border border-slate-200 px-3.5 py-1.5 text-sm font-medium text-slate-600">Image Tools</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- Title -->
+  <section class="border-b border-slate-200" style="background-image: radial-gradient(#E2E8F0 1px, transparent 1px); background-size: 22px 22px;">
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+      <nav aria-label="Breadcrumb" class="text-sm text-slate-500">
+        <a href="index.html" class="hover:text-brand">Home</a>
+        <span class="mx-1.5 text-slate-300">/</span>
+        <span class="text-slate-700">Contact Us</span>
+      </nav>
+      <h1 class="mt-4 text-3xl font-extrabold tracking-tight sm:text-4xl md:text-5xl">Contact Us</h1>
+      <p class="mt-4 max-w-2xl text-lg leading-relaxed text-slate-600">
+        Found a bug, need a tool we don’t have yet, or just have a question? Send us a message and a real person will read it.
+      </p>
+    </div>
+  </section>
+
+  <!-- Form + sidebar -->
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-14">
+    <div class="grid gap-6 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)]">
+
+      <!-- Form -->
+      <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,.04),0_12px_32px_-12px_rgba(15,23,42,.12)] sm:p-7">
+        <h2 class="text-lg font-semibold tracking-tight">Send a message</h2>
+        <p class="mt-1 text-sm text-slate-600">All fields are required.</p>
+
+        <div id="banner" tabindex="-1" role="status" class="mt-5 hidden rounded-xl border px-4 py-3.5">
+          <p id="banner-title" class="font-semibold"></p>
+          <p id="banner-text" class="mt-0.5 text-sm leading-relaxed"></p>
+        </div>
+
+        <form id="form" novalidate class="mt-5 space-y-5">
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="name" class="lbl">Name</label>
+              <input id="name" name="name" type="text" autocomplete="name" class="input h-11" placeholder="Your name" aria-describedby="name-err">
+              <p id="name-err" class="err"></p>
+            </div>
+            <div>
+              <label for="email" class="lbl">Email</label>
+              <input id="email" name="email" type="email" autocomplete="email" inputmode="email" class="input h-11" placeholder="you@example.com" aria-describedby="email-err">
+              <p id="email-err" class="err"></p>
+            </div>
+          </div>
+
+          <div>
+            <label for="subject" class="lbl">Subject</label>
+            <select id="subject" name="subject" class="input h-11" aria-describedby="subject-err">
+              <option value="">Choose a subject</option>
+              <option value="bug">Report a Bug</option>
+              <option value="tool">Suggest a New Tool</option>
+              <option value="general">General Inquiry</option>
+            </select>
+            <p id="subject-err" class="err"></p>
+          </div>
+
+          <div>
+            <label for="message" class="lbl">Message</label>
+            <textarea id="message" name="message" rows="6" class="input resize-y py-2.5 leading-relaxed" placeholder="Tell us what’s on your mind." aria-describedby="message-err"></textarea>
+            <p id="message-err" class="err"></p>
+          </div>
+
+          <!-- Honeypot for spam bots; real visitors never see or fill this -->
+          <div class="hp" aria-hidden="true">
+            <label for="website">Leave this field empty</label>
+            <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
+
+          <button id="send" type="submit" class="inline-flex h-12 w-full items-center justify-center rounded-lg bg-brand px-6 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark disabled:cursor-wait disabled:opacity-70 sm:w-auto">
+            <span id="send-label">Send message</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <div class="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+          <h2 class="text-lg font-semibold tracking-tight">Prefer email?</h2>
+          <p class="mt-1 text-sm leading-relaxed text-slate-600">Write to us directly from your own mail app.</p>
+          <a id="email-link" href="mailto:support@heymicrotools.com" class="mt-4 block break-all rounded-lg bg-brand-soft px-4 py-3 text-[15px] font-semibold text-brand transition-colors hover:bg-blue-100">support@heymicrotools.com</a>
+          <button id="copy-email" type="button" class="mt-3 inline-flex h-11 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-800 transition-colors hover:border-slate-300 hover:bg-slate-50">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+            <span id="copy-label">Copy email</span>
+          </button>
+        </div>
+
+        <div class="rounded-2xl border border-slate-200 bg-white">
+          <h2 class="px-5 pt-5 text-lg font-semibold tracking-tight sm:px-6 sm:pt-6">Quick answers</h2>
+          <div class="mt-3 divide-y divide-slate-200 border-t border-slate-200">
+            <details class="group px-5 py-4 sm:px-6" open>
+              <summary class="flex items-center justify-between gap-4 text-[15px] font-semibold">
+                How fast will I hear back?
+                <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <p class="mt-2.5 text-sm leading-relaxed text-slate-600">We reply to most messages within 24 to 48 hours. If you don’t see a reply, check your spam folder, since replies come from our support address.</p>
+            </details>
+            <details class="group px-5 py-4 sm:px-6">
+              <summary class="flex items-center justify-between gap-4 text-[15px] font-semibold">
+                How do I request a custom calculator?
+                <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <p class="mt-2.5 text-sm leading-relaxed text-slate-600">Choose <em>Suggest a New Tool</em> in the form. Tell us what you want to work out, which numbers you would enter, and an example with the answer you expect. The more specific you are, the faster we can build it.</p>
+            </details>
+            <details class="group px-5 py-4 sm:px-6">
+              <summary class="flex items-center justify-between gap-4 text-[15px] font-semibold">
+                What should I include in a bug report?
+                <svg class="chev h-4 w-4 shrink-0 text-slate-400 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <p class="mt-2.5 text-sm leading-relaxed text-slate-600">Name the tool, the values you entered, the result you got and the result you expected. Mentioning your device and browser helps too.</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 bg-white">
+  <div class="mx-auto max-w-6xl px-4 py-12 sm:px-6" style="padding-bottom: calc(3rem + env(safe-area-inset-bottom, 0px))">
+    <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+      <div class="max-w-xs">
+        <a href="index.html" class="flex items-center gap-2 font-semibold tracking-tight">
+          <span class="flex h-7 w-7 items-center justify-center rounded-md bg-brand text-white">
+            <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg>
+          </span>
+          hey<span class="text-brand">micro</span>tools
+        </a>
+        <p class="mt-3 text-sm leading-relaxed text-slate-600">Simple, private tools for everyday tasks.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-10 sm:gap-16">
+        <div>
+          <h4 class="text-sm font-semibold">Company</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="about.html" class="transition-colors hover:text-brand">About Us</a></li>
+            <li><a href="contact.html" class="transition-colors hover:text-brand">Contact Us</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="text-sm font-semibold">Legal</h4>
+          <ul class="mt-3 space-y-2.5 text-sm text-slate-600">
+            <li><a href="privacy-policy.html" class="transition-colors hover:text-brand">Privacy Policy</a></li>
+            <li><a href="terms-of-service.html" class="transition-colors hover:text-brand">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-slate-200 pt-6 text-sm text-slate-500">
+      © <span id="year">2026</span> heymicrotools. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* ---------- Settings ----------
+     FORM_ENDPOINT: paste a form-backend URL (for example a Formspree link such as
+     'https://formspree.io/f/xxxxxxxx') to have messages delivered straight to your inbox.
+     While it is empty, the form opens the visitor's email app with the message ready to send. */
+  var FORM_ENDPOINT = '';
+  var EMAIL = 'support@heymicrotools.com';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $('form'), banner = $('banner'), sendBtn = $('send'), sendLabel = $('send-label');
+  var LABELS = { bug: 'Report a Bug', tool: 'Suggest a New Tool', general: 'General Inquiry' };
+  var fields = ['name', 'email', 'subject', 'message'];
+
+  // Preselect the subject from a link such as contact.html?subject=tool
+  var pre = new URLSearchParams(location.search).get('subject');
+  if (pre && LABELS[pre]) $('subject').value = pre;
+
+  /* ---------- Banner ---------- */
+  var STYLES = {
+    success: 'border-emerald-200 bg-emerald-50 text-emerald-900',
+    info: 'border-brand/30 bg-brand-soft text-slate-800',
+    error: 'border-red-200 bg-red-50 text-red-800'
+  };
+  function showBanner(type, title, text) {
+    banner.className = 'mt-5 rounded-xl border px-4 py-3.5 ' + STYLES[type];
+    $('banner-title').textContent = title;
+    $('banner-text').textContent = text;
+    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    banner.focus({ preventScroll: true });
+  }
+  function hideBanner() { banner.className = 'mt-5 hidden rounded-xl border px-4 py-3.5'; }
+
+  /* ---------- Validation ---------- */
+  function setError(id, msg) {
+    var el = $(id), out = $(id + '-err');
+    if (msg) { el.setAttribute('aria-invalid', 'true'); out.textContent = msg; out.classList.remove('hidden'); }
+    else { el.removeAttribute('aria-invalid'); out.textContent = ''; out.classList.add('hidden'); }
+  }
+  function check(id) {
+    var v = $(id).value.trim(), msg = '';
+    if (id === 'name') { if (v.length < 2) msg = 'Please enter your name.'; }
+    if (id === 'email') {
+      if (!v) msg = 'Please enter your email address.';
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)) msg = 'That email address doesn’t look right. Check it for typos.';
+    }
+    if (id === 'subject') { if (!LABELS[$(id).value]) msg = 'Please choose a subject.'; }
+    if (id === 'message') {
+      if (!v) msg = 'Please write a message.';
+      else if (v.length < 10) msg = 'Please add a little more detail (at least 10 characters).';
+      else if (v.length > 5000) msg = 'Please keep your message under 5,000 characters.';
+    }
+    setError(id, msg);
+    return !msg;
+  }
+  fields.forEach(function (id) {
+    $(id).addEventListener('blur', function () { if ($(id).value || $(id).hasAttribute('aria-invalid')) check(id); });
+    $(id).addEventListener('input', function () { if ($(id).hasAttribute('aria-invalid')) check(id); });
+    $(id).addEventListener('change', function () { if ($(id).hasAttribute('aria-invalid')) check(id); });
+  });
+
+  /* ---------- Submit ---------- */
+  function busy(on) { sendBtn.disabled = on; sendLabel.textContent = on ? 'Sending…' : 'Send message'; }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    hideBanner();
+    var firstBad = null;
+    fields.forEach(function (id) { if (!check(id) && !firstBad) firstBad = id; });
+    if (firstBad) { $(firstBad).focus(); return; }
+
+    var data = {
+      name: $('name').value.trim(), email: $('email').value.trim(),
+      subject: LABELS[$('subject').value], message: $('message').value.trim()
+    };
+
+    // Honeypot filled in: act as if it worked, send nothing.
+    if ($('website').value) { form.reset(); showBanner('success', 'Thank you! Your message has been received.', 'We’ll get back to you within 24 to 48 hours.'); return; }
+
+    if (FORM_ENDPOINT) {
+      busy(true);
+      fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ name: data.name, email: data.email, subject: data.subject, message: data.message, _replyto: data.email })
+      }).then(function (r) {
+        if (!r.ok) throw new Error('bad status');
+        form.reset();
+        showBanner('success', 'Thank you! Your message has been received.', 'We’ll reply to ' + data.email + ' within 24 to 48 hours.');
+      }).catch(function () {
+        showBanner('error', 'We couldn’t send your message.', 'Please try again in a moment, or email us directly at ' + EMAIL + '.');
+      }).then(function () { busy(false); });
+    } else {
+      var body = data.message + '\n\n' + data.name + '\n' + data.email;
+      location.href = 'mailto:' + EMAIL + '?subject=' + encodeURIComponent('[' + data.subject + '] ' + data.name) + '&body=' + encodeURIComponent(body);
+      showBanner('info', 'Thank you! One last step.', 'Your email app should now open with your message ready. Press send to finish. If nothing opened, use the Copy email button and write to us from any mail app.');
+    }
+  });
+
+  /* ---------- Copy email ---------- */
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); return ok;
+  }
+  function flash(t) { $('copy-label').textContent = t; setTimeout(function () { $('copy-label').textContent = 'Copy email'; }, 1800); }
+  $('copy-email').addEventListener('click', function () {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(EMAIL).then(function () { flash('Copied'); }, function () { flash(fallbackCopy(EMAIL) ? 'Copied' : 'Copy failed'); });
+    } else { flash(fallbackCopy(EMAIL) ? 'Copied' : 'Copy failed'); }
+  });
+
+  $('year').textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>
