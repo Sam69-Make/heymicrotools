@@ -169,7 +169,19 @@ tailwind.config = { theme: { extend: {
               <dd id="r-td" class="num mt-1 text-xl font-semibold"></dd>
               <dd id="r-th" class="num text-xs text-slate-500"></dd>
             </div>
- <!-- How to use -->
+          </dl>
+
+          <div class="mt-3 rounded-xl border border-brand/30 bg-white px-4 py-4">
+            <p class="text-xs font-medium text-slate-500">Next birthday</p>
+            <p id="r-cd" class="num mt-1 text-2xl font-bold tracking-tight"></p>
+            <p id="r-cd2" class="mt-1 text-sm text-slate-600"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to use -->
   <section class="border-t border-slate-200 bg-slate-50">
     <div class="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-16">
       <h2 class="text-2xl font-bold tracking-tight">How to use the age calculator</h2>
@@ -267,198 +279,124 @@ tailwind.config = { theme: { extend: {
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  var dob = $('dob'), at = $('at'), err = $('error'), copyBtn = $('copy'), copyLabel = $('copy-label'), resetBtn = $('reset');
-  var placeholder = $('placeholder'), results = $('results');
-  var rDate = $('r-date'), rHeadline = $('r-headline'), rY = $('r-y'), rM = $('r-m'), rD = $('r-d');
-  var rW = $('r-w'), rWd = $('r-wd'), rTd = $('r-td'), rTh = $('r-th'), rCd = $('r-cd'), rCd2 = $('r-cd2');
-  var yearEl = $('year');
-  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+  var dob = $('dob'), at = $('at'), err = $('error'), copyBtn = $('copy'), copyLabel = $('copy-label');
+  var lastText = '';
+  var DAY = 86400000;
 
-  var summaryText = '';
-
-  function todayStr() {
-    var now = new Date();
-    var y = now.getFullYear();
-    var m = String(now.getMonth() + 1).padStart(2, '0');
-    var d = String(now.getDate()).padStart(2, '0');
-    return y + '-' + m + '-' + d;
+  function pad(n) { return (n < 10 ? '0' : '') + n; }
+  function todayStr() { var n = new Date(); return n.getFullYear() + '-' + pad(n.getMonth() + 1) + '-' + pad(n.getDate()); }
+  function parse(s) { var p = s.split('-'); return { y: +p[0], m: +p[1], d: +p[2] }; }
+  function utc(o) { return Date.UTC(o.y, o.m - 1, o.d); }
+  function fromTs(ts) { var x = new Date(ts); return { y: x.getUTCFullYear(), m: x.getUTCMonth() + 1, d: x.getUTCDate() }; }
+  function dim(y, m) { return new Date(Date.UTC(y, m, 0)).getUTCDate(); }
+  function fmtNum(n) { return n.toLocaleString('en-US'); }
+  function fmtDate(ts, long) {
+    return new Date(ts).toLocaleDateString('en-US', { timeZone: 'UTC', weekday: long ? 'long' : undefined, year: 'numeric', month: 'long', day: 'numeric' });
   }
+  function plural(n, w) { return n + ' ' + w + (n === 1 ? '' : 's'); }
 
-  function parseDate(str) {
-    if (!str) return null;
-    var parts = str.split('-');
-    if (parts.length !== 3) return null;
-    var y = Number(parts[0]), m = Number(parts[1]), d = Number(parts[2]);
-    if (!y || !m || !d) return null;
-    var dt = new Date(Date.UTC(y, m - 1, d));
-    if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== m - 1 || dt.getUTCDate() !== d) return null;
-    return dt;
-  }
-
-  function formatDisplay(dt) {
-    return dt.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', timeZone: 'UTC' });
-  }
-
-  function daysInMonth(year, monthIndex) {
-    return new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
+  // Whole calendar months from a to b (day clamped to month end), plus leftover days.
+  function span(a, b) {
+    var bTs = utc(b);
+    var months = (b.y - a.y) * 12 + (b.m - a.m);
+    function anchor(n) {
+      var idx = a.m - 1 + n, yy = a.y + Math.floor(idx / 12), mm = idx % 12 + 1;
+      return Date.UTC(yy, mm - 1, Math.min(a.d, dim(yy, mm)));
+    }
+    if (anchor(months) > bTs) months--;
+    return { months: months, days: Math.round((bTs - anchor(months)) / DAY) };
   }
 
   function showError(msg) {
-    err.textContent = msg;
-    err.classList.remove('hidden');
-    results.classList.add('hidden');
-    placeholder.classList.remove('hidden');
-    copyBtn.disabled = true;
-    summaryText = '';
+    err.textContent = msg; err.classList.remove('hidden');
+    $('results').classList.add('hidden'); $('placeholder').classList.remove('hidden');
+    copyBtn.disabled = true; lastText = '';
   }
 
-  function clearError() {
-    err.textContent = '';
+  function calculate() {
     err.classList.add('hidden');
-  }
-
-  function update() {
-    var birth = parseDate(dob.value);
     if (!dob.value) {
-      clearError();
-      results.classList.add('hidden');
-      placeholder.classList.remove('hidden');
-      copyBtn.disabled = true;
-      summaryText = '';
-      return;
+      $('results').classList.add('hidden'); $('placeholder').classList.remove('hidden');
+      copyBtn.disabled = true; lastText = ''; return;
     }
+    if (!at.value) at.value = todayStr();
+    var b = parse(dob.value), t = parse(at.value);
+    var bTs = utc(b), tTs = utc(t);
+    if (isNaN(bTs) || isNaN(tTs)) return;
+    if (b.y < 1900) { showError('Enter a date of birth from 1900 onward.'); return; }
+    if (bTs > tTs) { showError('The date of birth is after the comparison date. Choose a birth date that comes first.'); return; }
 
-    var target = parseDate(at.value);
-    if (!target) {
-      at.value = todayStr();
-      target = parseDate(at.value);
-    }
+    var s = span(b, t);
+    var years = Math.floor(s.months / 12), months = s.months % 12, days = s.days;
+    var totalDays = Math.round((tTs - bTs) / DAY);
+    var weeks = Math.floor(totalDays / 7), remDays = totalDays % 7;
 
-    if (!birth) {
-      showError('Please enter a valid date of birth.');
-      return;
-    }
+    // Next birthday (Feb 29 rolls to Mar 1 in non-leap years)
+    var year = t.y, cand = Date.UTC(year, b.m - 1, b.d);
+    if (cand < tTs) { year++; cand = Date.UTC(year, b.m - 1, b.d); }
+    var untilDays = Math.round((cand - tTs) / DAY);
+    var turning = year - b.y;
+    var cs = span(t, fromTs(cand));
 
-    var minDate = new Date(Date.UTC(1900, 0, 1));
-    if (birth < minDate || target < minDate) {
-      showError('Please choose dates on or after January 1, 1900.');
-      return;
-    }
+    var headline = plural(years, 'year') + ', ' + plural(months, 'month') + ', ' + plural(days, 'day');
+    $('r-date').textContent = fmtDate(tTs, true);
+    $('r-headline').textContent = headline;
+    $('r-y').textContent = fmtNum(years); $('r-m').textContent = months; $('r-d').textContent = days;
+    $('r-w').textContent = fmtNum(weeks) + (weeks === 1 ? ' week' : ' weeks');
+    $('r-wd').textContent = '+ ' + plural(remDays, 'day');
+    $('r-td').textContent = fmtNum(totalDays) + (totalDays === 1 ? ' day' : ' days');
+    $('r-th').textContent = '≈ ' + fmtNum(totalDays * 24) + ' hours';
 
-    if (target < birth) {
-      showError('The comparison date cannot be earlier than the date of birth.');
-      return;
-    }
-
-    clearError();
-
-    var by = birth.getUTCFullYear(), bm = birth.getUTCMonth(), bd = birth.getUTCDate();
-    var ty = target.getUTCFullYear(), tm = target.getUTCMonth(), td = target.getUTCDate();
-
-    var years = ty - by;
-    var months = tm - bm;
-    var days = td - bd;
-
-    if (days < 0) {
-      months -= 1;
-      var prevMonthYear = tm === 0 ? ty - 1 : ty;
-      var prevMonthIndex = tm === 0 ? 11 : tm - 1;
-      days += daysInMonth(prevMonthYear, prevMonthIndex);
-    }
-
-    if (months < 0) {
-      years -= 1;
-      months += 12;
-    }
-
-    var msPerDay = 86400000;
-    var totalDays = Math.floor((target.getTime() - birth.getTime()) / msPerDay);
-    var totalWeeks = Math.floor(totalDays / 7);
-    var remDays = totalDays % 7;
-    var totalHours = totalDays * 24;
-
-    var nextBdayYear = ty;
-    var bMonth = bm;
-    var bDay = bd;
-    if (bMonth === 1 && bDay === 29 && daysInMonth(nextBdayYear, 1) < 29) {
-      bMonth = 2;
-      bDay = 1;
-    }
-    var nextBday = new Date(Date.UTC(nextBdayYear, bMonth, bDay));
-    if (nextBday < target) {
-      nextBdayYear += 1;
-      bMonth = bm;
-      bDay = bd;
-      if (bMonth === 1 && bDay === 29 && daysInMonth(nextBdayYear, 1) < 29) {
-        bMonth = 2;
-        bDay = 1;
-      }
-      nextBday = new Date(Date.UTC(nextBdayYear, bMonth, bDay));
-    }
-
-    var daysUntilBday = Math.floor((nextBday.getTime() - target.getTime()) / msPerDay);
-
-    rDate.textContent = formatDisplay(target);
-    rHeadline.textContent = years + 'y ' + months + 'm ' + days + 'd';
-    rY.textContent = years.toLocaleString();
-    rM.textContent = months.toLocaleString();
-    rD.textContent = days.toLocaleString();
-
-    rW.textContent = totalWeeks.toLocaleString() + ' weeks';
-    rWd.textContent = remDays === 0 ? 'Exact weeks' : remDays + (remDays === 1 ? ' extra day' : ' extra days');
-
-    rTd.textContent = totalDays.toLocaleString() + ' days';
-    rTh.textContent = totalHours.toLocaleString() + ' hours approx.';
-
-    if (daysUntilBday === 0) {
-      rCd.textContent = 'Happy birthday!';
-      rCd2.textContent = 'Birthday falls on ' + formatDisplay(nextBday) + '.';
+    var cdText, cdSub;
+    if (untilDays === 0) {
+      cdText = 'Today is the birthday!';
+      cdSub = 'Turning ' + turning + ' on ' + fmtDate(cand, true) + '.';
     } else {
-      rCd.textContent = daysUntilBday.toLocaleString() + (daysUntilBday === 1 ? ' day left' : ' days left');
-      rCd2.textContent = 'Next birthday on ' + formatDisplay(nextBday) + '.';
+      cdText = plural(untilDays, 'day') + ' to go';
+      var parts = [];
+      if (cs.months) parts.push(plural(cs.months, 'month'));
+      if (cs.days) parts.push(plural(cs.days, 'day'));
+      cdSub = (parts.length && untilDays > 31 ? parts.join(', ') + '. ' : '') + 'Turning ' + turning + ' on ' + fmtDate(cand, true) + '.';
     }
+    $('r-cd').textContent = cdText; $('r-cd2').textContent = cdSub;
 
-    summaryText = 'Age on ' + formatDisplay(target) + ': ' + years + ' years, ' + months + ' months, ' + days + ' days (' + totalDays.toLocaleString() + ' total days).';
+    lastText = 'Age on ' + fmtDate(tTs, false) + ': ' + headline + '\n' +
+      'Total weeks: ' + fmtNum(weeks) + ' (+ ' + plural(remDays, 'day') + ')\n' +
+      'Total days: ' + fmtNum(totalDays) + '\n' +
+      'Next birthday: ' + (untilDays === 0 ? 'today' : 'in ' + plural(untilDays, 'day')) + ' (' + fmtDate(cand, true) + ', turning ' + turning + ')';
 
-    placeholder.classList.add('hidden');
-    results.classList.remove('hidden');
+    $('placeholder').classList.add('hidden'); $('results').classList.remove('hidden');
     copyBtn.disabled = false;
   }
 
-  at.value = todayStr();
-  dob.addEventListener('input', update);
-  dob.addEventListener('change', update);
-  at.addEventListener('input', update);
-  at.addEventListener('change', update);
-
-  resetBtn.addEventListener('click', function () {
-    dob.value = '';
-    at.value = todayStr();
-    copyLabel.textContent = 'Copy result';
-    update();
-  });
-
+  function flash(label) {
+    copyLabel.textContent = label;
+    setTimeout(function () { copyLabel.textContent = 'Copy result'; }, 1800);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false; try { ok = document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta); return ok;
+  }
   copyBtn.addEventListener('click', function () {
-    if (!summaryText || !navigator.clipboard) return;
-    navigator.clipboard.writeText(summaryText).then(function () {
-      copyLabel.textContent = 'Copied';
-      setTimeout(function () {
-        copyLabel.textContent = 'Copy result';
-      }, 1500);
-    }).catch(function () {});
+    if (!lastText) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastText).then(function () { flash('Copied'); }, function () { flash(fallbackCopy(lastText) ? 'Copied' : 'Copy failed'); });
+    } else { flash(fallbackCopy(lastText) ? 'Copied' : 'Copy failed'); }
   });
+
+  $('reset').addEventListener('click', function () {
+    dob.value = ''; at.value = todayStr(); calculate(); dob.focus();
+  });
+
+  var today = todayStr();
+  at.value = today; dob.max = today;
+  dob.addEventListener('input', calculate); dob.addEventListener('change', calculate);
+  at.addEventListener('input', calculate); at.addEventListener('change', calculate);
+  $('year').textContent = new Date().getFullYear();
 })();
 </script>
 </body>
 </html>
-          </dl>
-
-          <div class="mt-3 rounded-xl border border-brand/30 bg-white px-4 py-4">
-            <p class="text-xs font-medium text-slate-500">Next birthday</p>
-            <p id="r-cd" class="num mt-1 text-2xl font-bold tracking-tight"></p>
-            <p id="r-cd2" class="mt-1 text-sm text-slate-600"></p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
